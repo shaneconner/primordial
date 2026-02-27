@@ -239,7 +239,44 @@ class Body:
         # Integrate (semi-implicit Euler)
         acceleration = self.forces / self.masses[:, np.newaxis]
         self.velocities += acceleration * dt
+
+        # Velocity cap
+        speed = np.sqrt(np.sum(self.velocities ** 2, axis=1))
+        too_fast = speed > self.config.max_velocity
+        if np.any(too_fast):
+            scale = np.where(too_fast, self.config.max_velocity / np.maximum(speed, 1e-6), 1.0)
+            self.velocities *= scale[:, np.newaxis]
+
         self.positions += self.velocities * dt
+
+        # Enforce max stretch on springs
+        self._enforce_max_stretch()
+
+    def _enforce_max_stretch(self) -> None:
+        """Clamp spring lengths to prevent extreme stretching."""
+        if self.n_edges == 0:
+            return
+        d = self.positions[self.edge_to] - self.positions[self.edge_from]
+        dist = np.sqrt(np.sum(d * d, axis=1))
+        max_len = self.rest_lengths * self.config.max_stretch
+        mask = dist > max_len
+        if not np.any(mask):
+            return
+        # Move both endpoints toward each other, weighted by inverse mass
+        unit = d / np.maximum(dist, 1e-6)[:, np.newaxis]
+        excess = np.where(mask, dist - max_len, 0.0)
+        mass_a = self.masses[self.edge_from]
+        mass_b = self.masses[self.edge_to]
+        total = mass_a + mass_b
+        corr_a = (excess * mass_b / total)[:, np.newaxis] * unit
+        corr_b = (excess * mass_a / total)[:, np.newaxis] * unit
+        np.add.at(self.positions, self.edge_from, corr_a)
+        np.add.at(self.positions, self.edge_to, -corr_b)
+        # Dampen velocity of affected nodes
+        affected = np.zeros(self.n_nodes, dtype=bool)
+        affected[self.edge_from[mask]] = True
+        affected[self.edge_to[mask]] = True
+        self.velocities[affected] *= 0.5
 
     def step_full(self) -> None:
         """Run all physics substeps for one simulation tick."""

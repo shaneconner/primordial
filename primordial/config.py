@@ -35,6 +35,10 @@ class BodyConfig:
     dt: float = 0.1  # physics timestep
     substeps: int = 4  # physics substeps per simulation tick
 
+    # Stability constraints
+    max_stretch: float = 3.0  # max multiple of rest length before clamping
+    max_velocity: float = 50.0  # velocity cap per node
+
     # Muscle control
     muscle_min_contraction: float = 0.5  # min fraction of rest length
     muscle_max_contraction: float = 1.5  # max fraction of rest length
