@@ -5,17 +5,17 @@ from dataclasses import dataclass, field
 
 @dataclass
 class WorldConfig:
-    width: float = 500.0
-    height: float = 500.0
+    width: float = 1600.0
+    height: float = 900.0
     wrap_around: bool = True
-    spatial_cell_size: float = 50.0
+    spatial_cell_size: float = 80.0
 
     # Resource spawning
-    plant_spawn_rate: float = 1.5  # plants per tick
+    plant_spawn_rate: float = 2.5  # plants per tick
     plant_energy: float = 25.0
-    plant_min_spawn_rate: float = 0.5  # floor to prevent total starvation
-    initial_food_count: int = 500  # starting food resources
-    max_resources: int = 2000  # cap to prevent unbounded growth
+    plant_min_spawn_rate: float = 2.0  # floor to prevent total starvation
+    initial_food_count: int = 600  # starting food resources
+    max_resources: int = 3000  # cap to prevent unbounded growth
     meat_decay_rate: float = 0.005  # fraction of energy lost per tick
     nutrient_plant_boost: float = 2.0  # multiplier on local plant growth
 
@@ -33,7 +33,7 @@ class BodyConfig:
     spring_damping: float = 0.8
     drag_coefficient: float = 0.05
     dt: float = 0.1  # physics timestep
-    substeps: int = 4  # physics substeps per simulation tick
+    substeps: int = 2  # physics substeps per simulation tick
 
     # Stability constraints
     max_stretch: float = 3.0  # max multiple of rest length before clamping
@@ -134,6 +134,6 @@ class SimConfig:
     recorder: RecorderConfig = field(default_factory=RecorderConfig)
 
     initial_population: int = 50
-    max_population: int = 500
+    max_population: int = 200
     max_ticks: int = 100_000
     seed: int = 42

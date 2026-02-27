@@ -9,5 +9,6 @@ build/
 venv/
 clips/*.json
 *.pyc
-.claude/settings.local.json
-.claude/.env
+.gitignore
+.claude/
+NUL
