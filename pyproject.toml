@@ -1,0 +1,16 @@
+[project]
+name = "primordial"
+version = "0.1.0"
+description = "A Study on Emergent Behaviors and Neuroevolution"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "orjson>=3.9",
+]
+
+[project.optional-dependencies]
+gpu = ["torch>=2.0"]
+dev = ["matplotlib>=3.8", "pytest>=7.0"]
+
+[project.scripts]
+primordial = "scripts.run:main"
