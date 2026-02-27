@@ -41,6 +41,13 @@ clips/               # Output directory for recorded simulation data (gitignored
 python scripts/run.py --ticks 5000 --population 50 --seed 42
 ```
 
+## Visualization (debug)
+```bash
+python scripts/visualize.py                      # live simulation
+python scripts/visualize.py clips/test_run.json  # replay a clip
+```
+Requires matplotlib: `pip install matplotlib`
+
 ## Performance Notes
 - ~18-40 ticks/second depending on population (40-180 organisms)
 - Bottleneck is physics (spring force computation) and spatial queries
