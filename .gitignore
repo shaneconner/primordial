@@ -9,4 +9,5 @@ build/
 venv/
 clips/*.json
 *.pyc
-.claude/
+.claude/settings.local.json
+.claude/.env
