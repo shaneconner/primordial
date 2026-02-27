@@ -299,13 +299,22 @@ class World:
         self.organisms = surviving
 
     def wrap_positions(self) -> None:
-        """Wrap organism positions for toroidal world."""
+        """Wrap organism positions for toroidal world.
+
+        Wraps the core node and moves all other nodes relative to it,
+        keeping the organism body coherent across the boundary.
+        """
         if not self.config.world.wrap_around:
             return
+        w, h = self.width, self.height
         for org in self.organisms:
-            for i in range(org.body.n_nodes):
-                org.body.positions[i][0] %= self.width
-                org.body.positions[i][1] %= self.height
+            core = org.body.positions[0]
+            old_x, old_y = core[0], core[1]
+            new_x, new_y = old_x % w, old_y % h
+            dx, dy = new_x - old_x, new_y - old_y
+            if dx != 0.0 or dy != 0.0:
+                org.body.positions[:, 0] += dx
+                org.body.positions[:, 1] += dy
 
     def add_organism(self, org: Organism) -> None:
         self.organisms.append(org)
