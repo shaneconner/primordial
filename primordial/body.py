@@ -234,7 +234,11 @@ class Body:
             np.add.at(self.forces, self.edge_to, -force_vectors)
 
         # Drag force (proportional to velocity)
-        self.forces -= self.config.drag_coefficient * self.velocities * self.masses[:, np.newaxis]
+        drag = self.config.drag_coefficient
+        if self.config.bone_drag_reduction > 0:
+            bone_count = int(np.sum(self.node_types == NodeType.BONE))
+            drag = drag / (1.0 + self.config.bone_drag_reduction * bone_count)
+        self.forces -= drag * self.velocities * self.masses[:, np.newaxis]
 
         # Integrate (semi-implicit Euler)
         acceleration = self.forces / self.masses[:, np.newaxis]
@@ -358,7 +362,7 @@ def create_default_body(config: BodyConfig, rng: np.random.Generator) -> Body:
     ]
 
     # Positions with small random perturbation
-    spread = 1.5
+    spread = config.initial_spread
     positions = np.array([
         [0.0, 0.0],                          # core
         [0.0, -spread],                       # sensor (front)

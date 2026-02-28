@@ -12,6 +12,8 @@ from .body import Body, EdgeType, NodeType, is_connected
 if TYPE_CHECKING:
     from .config import BodyConfig, BrainConfig, EvolutionConfig
 
+_ACTIVATION_OPTIONS = ["tanh", "relu", "sigmoid"]
+
 
 class Genome:
     """Complete genome encoding body plan, brain architecture, and meta-parameters.
@@ -87,12 +89,13 @@ def create_default_genome(
     rng: np.random.Generator,
 ) -> Genome:
     """Create a genome for a default starter organism."""
+    spread = body_config.initial_spread
     body_nodes = [
         {"type": int(NodeType.CORE), "rx": 0.0, "ry": 0.0},
-        {"type": int(NodeType.SENSOR), "rx": 0.0, "ry": -1.5},
-        {"type": int(NodeType.MUSCLE_ANCHOR), "rx": -1.5, "ry": 0.0},
-        {"type": int(NodeType.MUSCLE_ANCHOR), "rx": 1.5, "ry": 0.0},
-        {"type": int(NodeType.MOUTH), "rx": 0.0, "ry": -1.05},
+        {"type": int(NodeType.SENSOR), "rx": 0.0, "ry": -spread},
+        {"type": int(NodeType.MUSCLE_ANCHOR), "rx": -spread, "ry": 0.0},
+        {"type": int(NodeType.MUSCLE_ANCHOR), "rx": spread, "ry": 0.0},
+        {"type": int(NodeType.MOUTH), "rx": 0.0, "ry": -spread * 0.7},
     ]
 
     body_edges = [
@@ -108,8 +111,9 @@ def create_default_genome(
     n_muscles = sum(1 for e in body_edges if e["type"] == int(EdgeType.MUSCLE))
     n_memory = brain_config.n_memory
 
-    n_inputs = min((n_sensors * 3) + 2 + n_muscles, brain_config.max_inputs)
-    n_outputs = min(n_muscles + 2, brain_config.max_outputs)
+    ips = brain_config.inputs_per_sensor
+    n_inputs = min((n_sensors * ips) + 2 + n_muscles, brain_config.max_inputs)
+    n_outputs = min(n_muscles + brain_config.n_action_outputs, brain_config.max_outputs)
     hidden = brain_config.default_hidden_size
 
     total_in = n_inputs + n_memory
@@ -122,7 +126,7 @@ def create_default_genome(
         "body_mutation_rate": evolution_config.body_mutation_rate,
         "brain_mutation_rate": evolution_config.brain_mutation_rate,
         "weight_perturb_scale": evolution_config.weight_perturb_scale,
-        "symmetry_bias": 0.7,
+        "symmetry_bias": 0.4,
     }
 
     return Genome(
@@ -144,6 +148,7 @@ def mutate(
     evolution_config: EvolutionConfig,
     brain_config: BrainConfig,
     rng: np.random.Generator,
+    body_config: "BodyConfig | None" = None,
 ) -> Genome:
     """Apply mutations to a genome. Returns a new mutated genome."""
     g = genome.clone()
@@ -154,9 +159,12 @@ def mutate(
     # --- Brain weight mutation ---
     _mutate_brain_weights(g, rng)
 
+    # --- Brain topology mutation (hidden size / activation) ---
+    _mutate_brain_topology(g, brain_config, rng)
+
     # --- Body structural mutation ---
     if rng.random() < g.meta["body_mutation_rate"]:
-        _mutate_body(g, evolution_config, rng)
+        _mutate_body(g, evolution_config, rng, body_config)
         # After body mutation, resize brain if needed
         _resize_brain_for_body(g, brain_config, rng)
 
@@ -185,10 +193,62 @@ def _mutate_brain_weights(g: Genome, rng: np.random.Generator) -> None:
         arr[mask] += rng.normal(0, scale, np.sum(mask))
 
 
+def _mutate_brain_topology(
+    g: Genome,
+    brain_config: BrainConfig,
+    rng: np.random.Generator,
+) -> None:
+    """Mutate brain hidden layer size and/or activation function."""
+    # Hidden size mutation: grow or shrink by 1
+    if rng.random() < brain_config.hidden_size_mutation_rate:
+        delta = int(rng.choice([-1, 1]))
+        new_size = g.brain_hidden_size + delta
+        new_size = max(4, min(brain_config.max_hidden_size, new_size))
+        if new_size != g.brain_hidden_size:
+            old_h = g.brain_hidden_size
+            g.brain_hidden_size = new_size
+            # Resize weight matrices
+            _resize_genome_hidden(g, old_h, new_size, rng)
+
+    # Activation function mutation
+    if rng.random() < brain_config.activation_mutation_rate:
+        others = [a for a in _ACTIVATION_OPTIONS if a != g.brain_activation]
+        g.brain_activation = str(rng.choice(others))
+
+
+def _resize_genome_hidden(
+    g: Genome, old_size: int, new_size: int, rng: np.random.Generator
+) -> None:
+    """Resize genome weight matrices when hidden layer changes."""
+    rows_ih, _ = g.brain_weights_ih.shape
+    _, cols_ho = g.brain_weights_ho.shape
+    copy_h = min(old_size, new_size)
+
+    # weights_ih: (total_inputs, hidden_size)
+    new_wih = np.zeros((rows_ih, new_size))
+    new_wih[:, :copy_h] = g.brain_weights_ih[:, :copy_h]
+    if new_size > old_size:
+        new_wih[:, old_size:] = rng.normal(0, 0.01, (rows_ih, new_size - old_size))
+    g.brain_weights_ih = new_wih
+
+    # weights_ho: (hidden_size, total_outputs)
+    new_who = np.zeros((new_size, cols_ho))
+    new_who[:copy_h, :] = g.brain_weights_ho[:copy_h, :]
+    if new_size > old_size:
+        new_who[old_size:, :] = rng.normal(0, 0.01, (new_size - old_size, cols_ho))
+    g.brain_weights_ho = new_who
+
+    # bias_h
+    new_bh = np.zeros(new_size)
+    new_bh[:copy_h] = g.brain_bias_h[:copy_h]
+    g.brain_bias_h = new_bh
+
+
 def _mutate_body(
     g: Genome,
     config: EvolutionConfig,
     rng: np.random.Generator,
+    body_config: "BodyConfig | None" = None,
 ) -> None:
     """Apply a single structural body mutation."""
     n_nodes = len(g.body_nodes)
@@ -200,7 +260,7 @@ def _mutate_body(
     # Add node
     cumulative += config.add_node_prob
     if roll < cumulative and n_nodes < config.max_body_nodes:
-        _body_add_node(g, rng)
+        _body_add_node(g, rng, body_config)
         return
 
     # Remove node
@@ -222,10 +282,10 @@ def _mutate_body(
         return
 
     # Perturb position
-    _body_perturb_position(g, rng)
+    _body_perturb_position(g, rng, body_config)
 
 
-def _body_add_node(g: Genome, rng: np.random.Generator) -> None:
+def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig | None" = None) -> None:
     """Add a new node connected to an existing node."""
     n = len(g.body_nodes)
     parent_idx = rng.integers(0, n)
@@ -238,7 +298,16 @@ def _body_add_node(g: Genome, rng: np.random.Generator) -> None:
     ]))
 
     # Position near parent with some offset
-    offset = rng.normal(0, 1.0, 2)
+    sigma = body_config.new_node_offset_sigma if body_config else 1.5
+    offset = rng.normal(0, sigma, 2)
+
+    # Outward bias: push new nodes away from core
+    outward_bias = body_config.new_node_outward_bias if body_config else 0.0
+    if outward_bias > 0 and (parent["rx"] != 0 or parent["ry"] != 0):
+        dist = max(0.01, (parent["rx"] ** 2 + parent["ry"] ** 2) ** 0.5)
+        offset[0] += outward_bias * sigma * parent["rx"] / dist
+        offset[1] += outward_bias * sigma * parent["ry"] / dist
+
     new_node = {
         "type": new_type,
         "rx": parent["rx"] + offset[0],
@@ -356,15 +425,16 @@ def _body_add_remove_edge(g: Genome, rng: np.random.Generator) -> None:
             g.body_edges.append({"from": a, "to": b, "type": etype})
 
 
-def _body_perturb_position(g: Genome, rng: np.random.Generator) -> None:
+def _body_perturb_position(g: Genome, rng: np.random.Generator, body_config: "BodyConfig | None" = None) -> None:
     """Slightly shift a node's relative position."""
     # Don't move core (it's always at 0,0)
     movable = [i for i in range(len(g.body_nodes)) if g.body_nodes[i]["type"] != int(NodeType.CORE)]
     if not movable:
         return
     target = int(rng.choice(movable))
-    g.body_nodes[target]["rx"] += rng.normal(0, 0.3)
-    g.body_nodes[target]["ry"] += rng.normal(0, 0.3)
+    sigma = body_config.position_perturb_sigma if body_config else 0.5
+    g.body_nodes[target]["rx"] += rng.normal(0, sigma)
+    g.body_nodes[target]["ry"] += rng.normal(0, sigma)
 
 
 def _resize_brain_for_body(
@@ -376,8 +446,9 @@ def _resize_brain_for_body(
     n_sensors = sum(1 for n in g.body_nodes if n["type"] == int(NodeType.SENSOR))
     n_muscles = sum(1 for e in g.body_edges if e["type"] == int(EdgeType.MUSCLE))
 
-    n_inputs = min((n_sensors * 3) + 2 + n_muscles, brain_config.max_inputs)
-    n_outputs = min(n_muscles + 2, brain_config.max_outputs)
+    ips = brain_config.inputs_per_sensor
+    n_inputs = min((n_sensors * ips) + 2 + n_muscles, brain_config.max_inputs)
+    n_outputs = min(n_muscles + brain_config.n_action_outputs, brain_config.max_outputs)
     total_in = n_inputs + g.brain_n_memory
     total_out = n_outputs + g.brain_n_memory
 

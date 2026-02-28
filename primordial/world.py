@@ -188,7 +188,7 @@ class World:
 
     def get_nearby_food(
         self, x: float, y: float, radius: float
-    ) -> list[tuple[float, float, float]]:
+    ) -> list[tuple[float, float, float, str]]:
         """Get food resources near a position."""
         items = self.resource_hash.query(x, y, radius)
         result = []
@@ -197,7 +197,7 @@ class World:
             dx = res.x - x
             dy = res.y - y
             if dx * dx + dy * dy <= r2:
-                result.append((res.x, res.y, res.energy))
+                result.append((res.x, res.y, res.energy, res.resource_type))
         return result
 
     def get_nearby_organisms(
@@ -254,7 +254,7 @@ class World:
     def handle_combat(self) -> None:
         """Process combat between organisms."""
         for org in self.organisms:
-            if not org.alive or not org.wants_to_eat():
+            if not org.alive or not org.wants_to_attack():
                 continue
             if org.body.n_mouths == 0:
                 continue
@@ -287,7 +287,7 @@ class World:
             if not org.alive:
                 self.dead_this_tick.append(org)
                 pos = org.position
-                meat_energy = org.body.total_mass * 5.0
+                meat_energy = org.body.total_mass * 8.0
                 self.resources.append(Resource(
                     x=pos[0], y=pos[1],
                     energy=meat_energy,

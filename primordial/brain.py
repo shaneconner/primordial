@@ -124,6 +124,34 @@ class Brain:
         # Return only the action outputs (not memory writes)
         return output[: self.n_outputs]
 
+    def resize_hidden(self, new_size: int, rng: np.random.Generator) -> None:
+        """Grow or shrink the hidden layer, preserving existing weights."""
+        old_size = self.hidden_size
+        if new_size == old_size:
+            return
+
+        # Resize weights_ih: (total_inputs, hidden_size)
+        new_wih = np.zeros((self.total_inputs, new_size))
+        copy_h = min(old_size, new_size)
+        new_wih[:, :copy_h] = self.weights_ih[:, :copy_h]
+        if new_size > old_size:
+            new_wih[:, old_size:] = rng.normal(0, 0.01, (self.total_inputs, new_size - old_size))
+        self.weights_ih = new_wih
+
+        # Resize weights_ho: (hidden_size, total_outputs)
+        new_who = np.zeros((new_size, self.total_outputs))
+        new_who[:copy_h, :] = self.weights_ho[:copy_h, :]
+        if new_size > old_size:
+            new_who[old_size:, :] = rng.normal(0, 0.01, (new_size - old_size, self.total_outputs))
+        self.weights_ho = new_who
+
+        # Resize bias_h
+        new_bh = np.zeros(new_size)
+        new_bh[:copy_h] = self.bias_h[:copy_h]
+        self.bias_h = new_bh
+
+        self.hidden_size = new_size
+
     def get_weight_count(self) -> int:
         """Total number of trainable parameters."""
         return (
@@ -160,12 +188,13 @@ def create_brain_for_body(
 ) -> Brain:
     """Create a brain sized for a specific body morphology.
 
-    Inputs per sensor: 3 (distance to food, distance to organism, organism type)
+    Inputs per sensor: configurable (3 for Part 1, 6 for Part 2)
     Additional inputs: energy, age, proprioception (1 per muscle)
-    Outputs: 1 per muscle (contraction), 1 eat signal, 1 reproduce signal
+    Outputs: 1 per muscle (contraction) + action outputs (eat+repro or eat+attack+repro)
     """
-    n_inputs = (n_sensors * 3) + 2 + n_muscles  # sensors + energy + age + proprioception
-    n_outputs = n_muscles + 2  # muscle targets + eat + reproduce
+    ips = config.inputs_per_sensor
+    n_inputs = (n_sensors * ips) + 2 + n_muscles
+    n_outputs = n_muscles + config.n_action_outputs
 
     # Clamp to buffer limits
     n_inputs = min(n_inputs, config.max_inputs)

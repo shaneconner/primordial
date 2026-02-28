@@ -66,6 +66,7 @@ class Organism:
 
         # Outputs from last brain step (for recording/inspection)
         self.last_eat_signal = 0.0
+        self.last_attack_signal = 0.0
         self.last_reproduce_signal = 0.0
 
     def _build_body(
@@ -84,10 +85,11 @@ class Organism:
         n_sensors = self.body.n_sensors
         n_muscles = self.body.n_muscles
 
+        ips = config.brain.inputs_per_sensor
         n_inputs = min(
-            (n_sensors * 3) + 2 + n_muscles, config.brain.max_inputs
+            (n_sensors * ips) + 2 + n_muscles, config.brain.max_inputs
         )
-        n_outputs = min(n_muscles + 2, config.brain.max_outputs)
+        n_outputs = min(n_muscles + config.brain.n_action_outputs, config.brain.max_outputs)
 
         return Brain(
             n_inputs=n_inputs,
@@ -113,13 +115,13 @@ class Organism:
 
     def sense(
         self,
-        nearby_food: list[tuple[float, float, float]],
+        nearby_food: list[tuple[float, float, float, str]],
         nearby_organisms: list[tuple[float, float, float, bool]],
     ) -> np.ndarray:
         """Gather sensory inputs from the environment.
 
         Args:
-            nearby_food: List of (x, y, energy) for food within sensor range.
+            nearby_food: List of (x, y, energy, type) for food within sensor range.
             nearby_organisms: List of (x, y, mass, same_species) for organisms in range.
 
         Returns:
@@ -128,8 +130,19 @@ class Organism:
         inputs = []
         com = self.body.center_of_mass
         com_x, com_y = float(com[0]), float(com[1])
+        n_sensors = self.body.n_sensors
+        ips = self.config.brain.inputs_per_sensor
+
+        # Sensor range/FOV scaling with sensor count
         sensor_range = self.config.body.sensor_range
         sensor_fov = self.config.body.sensor_fov
+        if n_sensors > 1:
+            # More sensors = wider total FOV coverage
+            sensor_fov = sensor_fov * n_sensors
+            sensor_fov = min(sensor_fov, math.pi)  # cap at 180 degrees half-angle
+            # More sensors = slightly better range
+            sensor_range = sensor_range * (1.0 + 0.15 * (n_sensors - 1))
+        per_sensor_fov = sensor_fov  # each sensor covers the full FOV band
 
         # Per-sensor inputs (use math module for scalar operations - faster than numpy)
         for sensor_idx in self.body.sensor_indices:
@@ -139,35 +152,49 @@ class Organism:
 
             # Find nearest food in this sensor's cone
             food_dist = sensor_range
-            for fx, fy, _energy in nearby_food:
+            food_angle = 0.0
+            food_type_val = 0.0
+            for food_item in nearby_food:
+                fx, fy = food_item[0], food_item[1]
                 dx, dy = fx - sx, fy - sy
                 d2 = dx * dx + dy * dy
                 if d2 < food_dist * food_dist:
                     angle_to = math.atan2(dy, dx)
                     angle_diff = abs(_wrap_angle(angle_to - sensor_dir))
-                    if angle_diff < sensor_fov:
+                    if angle_diff < per_sensor_fov:
                         food_dist = math.sqrt(d2)
+                        food_angle = _wrap_angle(angle_to - sensor_dir) / math.pi
+                        if len(food_item) > 3:
+                            food_type_val = 1.0 if food_item[3] == "plant" else -1.0
 
             # Find nearest organism in this sensor's cone
             org_dist = sensor_range
             org_type = 0.0
+            org_size = 0.0
             for ox, oy, omass, same_sp in nearby_organisms:
                 dx, dy = ox - sx, oy - sy
                 d2 = dx * dx + dy * dy
                 if d2 < org_dist * org_dist:
                     angle_to = math.atan2(dy, dx)
                     angle_diff = abs(_wrap_angle(angle_to - sensor_dir))
-                    if angle_diff < sensor_fov:
+                    if angle_diff < per_sensor_fov:
                         org_dist = math.sqrt(d2)
                         org_type = 1.0 if same_sp else -1.0
+                        org_size = min(omass / max(self.body.total_mass, 0.1), 2.0) - 1.0
 
             inputs.append(food_dist / sensor_range)
+            if ips >= 6:
+                inputs.append(food_angle)
+                inputs.append(food_type_val)
             inputs.append(org_dist / sensor_range)
+            if ips >= 6:
+                inputs.append(org_size)
             inputs.append(org_type)
 
         # Energy and age (normalized)
         inputs.append(self.energy / self.body.max_energy_capacity)
-        inputs.append(min(self.age / 5000.0, 1.0))
+        max_age = self.config.evolution.max_age
+        inputs.append(min(self.age / max_age, 1.0))
 
         # Proprioception: current muscle lengths
         muscle_lengths = self.body.get_muscle_lengths()
@@ -180,34 +207,55 @@ class Organism:
         outputs = self.brain.forward(inputs)
 
         n_muscles = self.body.n_muscles
+        n_actions = self.config.brain.n_action_outputs
 
         # Muscle targets
         if n_muscles > 0:
             self.body.set_muscle_targets(outputs[:n_muscles])
 
-        # Eat/attack signal
+        # Eat signal
         self.last_eat_signal = float(outputs[n_muscles]) if len(outputs) > n_muscles else 0.0
 
-        # Reproduce signal
-        self.last_reproduce_signal = (
-            float(outputs[n_muscles + 1]) if len(outputs) > n_muscles + 1 else 0.0
-        )
+        if n_actions >= 3:
+            # Part 2: separate attack and reproduce signals
+            self.last_attack_signal = float(outputs[n_muscles + 1]) if len(outputs) > n_muscles + 1 else 0.0
+            self.last_reproduce_signal = float(outputs[n_muscles + 2]) if len(outputs) > n_muscles + 2 else 0.0
+        else:
+            # Part 1: eat signal doubles as attack, reproduce is second output
+            self.last_attack_signal = self.last_eat_signal
+            self.last_reproduce_signal = (
+                float(outputs[n_muscles + 1]) if len(outputs) > n_muscles + 1 else 0.0
+            )
 
     def step_physics(self, rng: np.random.Generator) -> None:
         """Advance body physics one tick with Brownian motion."""
         # Apply random force to core node (thermal wandering)
         bf = self.config.body.brownian_force
         if bf > 0:
-            random_force = rng.normal(0, bf, 2)
+            # Size-based force scaling: larger bodies get proportionally stronger forces
+            force_scale = 1.0
+            if self.config.body.size_force_scaling:
+                force_scale = (self.body.n_nodes / 3.0) ** 0.5
+            random_force = rng.normal(0, bf * force_scale, 2)
             self.body.velocities[0] += random_force / self.body.masses[0]
         self.body.step_full()
 
     def metabolize(self) -> None:
-        """Deduct metabolic energy cost. Die if energy depleted."""
-        self.energy -= self.body.energy_cost_per_tick
+        """Deduct metabolic energy cost. Die if energy depleted or too old."""
+        cost = self.body.energy_cost_per_tick
+
+        # Senescence: metabolic cost rises in old age
+        max_age = self.config.evolution.max_age
+        senescence_start = int(max_age * self.config.evolution.senescence_age)
+        if self.age >= senescence_start:
+            progress = (self.age - senescence_start) / max(1, max_age - senescence_start)
+            multiplier = 1.0 + progress * (self.config.evolution.senescence_max_multiplier - 1.0)
+            cost *= multiplier
+
+        self.energy -= cost
         self.age += 1
 
-        if self.energy <= 0:
+        if self.age >= max_age or self.energy <= 0:
             self.energy = 0
             self.alive = False
 
@@ -233,6 +281,10 @@ class Organism:
             if asexual
             else self.config.evolution.sexual_energy_threshold
         )
+        # Fat nodes lower reproduction threshold
+        fat_bonus = self.config.body.fat_repro_bonus * len(self.body.fat_indices)
+        threshold = max(0.2, threshold - fat_bonus)
+
         return (
             self.alive
             and self.energy >= self.body.max_energy_capacity * threshold
@@ -244,6 +296,9 @@ class Organism:
 
     def wants_to_eat(self) -> bool:
         return self.last_eat_signal > 0.5
+
+    def wants_to_attack(self) -> bool:
+        return self.last_attack_signal > 0.5
 
     def to_dict(self) -> dict:
         """Serialize for recording."""

@@ -54,13 +54,13 @@ class BodyConfig:
     mass_armor: float = 2.5
 
     # Energy costs per tick (per node)
-    cost_core: float = 0.01
-    cost_bone: float = 0.005
-    cost_muscle_anchor: float = 0.015
-    cost_sensor: float = 0.01
-    cost_mouth: float = 0.01
-    cost_fat: float = 0.002
-    cost_armor: float = 0.008
+    cost_core: float = 0.04
+    cost_bone: float = 0.02
+    cost_muscle_anchor: float = 0.06
+    cost_sensor: float = 0.04
+    cost_mouth: float = 0.04
+    cost_fat: float = 0.008
+    cost_armor: float = 0.035
 
     # Eating
     eat_radius: float = 8.0  # contact distance for mouth to eat
@@ -72,6 +72,17 @@ class BodyConfig:
     sensor_range: float = 100.0
     sensor_fov: float = 0.8  # radians, half-angle of sensor cone
 
+    # Body geometry (initial spread and mutation offsets)
+    initial_spread: float = 1.5  # default body spread from core
+    new_node_offset_sigma: float = 1.5  # sigma for new node placement
+    new_node_outward_bias: float = 0.0  # bias new nodes away from core (0=none)
+    position_perturb_sigma: float = 0.5  # sigma for position perturbation mutations
+
+    # Anti-minimalism mechanics
+    size_force_scaling: bool = False  # larger bodies move faster
+    bone_drag_reduction: float = 0.0  # drag reduction per bone node
+    fat_repro_bonus: float = 0.0  # reproduction threshold reduction per fat node
+
 
 @dataclass
 class BrainConfig:
@@ -79,8 +90,12 @@ class BrainConfig:
     max_inputs: int = 32  # buffer size for variable input count
     max_outputs: int = 16  # buffer size for variable output count
     n_memory: int = 2  # number of memory registers
-    default_hidden_size: int = 8
+    default_hidden_size: int = 16
     default_activation: str = "tanh"  # tanh, relu, sigmoid
+    hidden_size_mutation_rate: float = 0.05  # chance to grow/shrink hidden layer
+    activation_mutation_rate: float = 0.02  # chance to switch activation fn
+    inputs_per_sensor: int = 3  # sensor inputs (Part 1: 3, Part 2: 6)
+    n_action_outputs: int = 2  # action outputs beyond muscles (Part 1: eat+repro, Part 2: eat+attack+repro)
 
 
 @dataclass
@@ -94,18 +109,18 @@ class EvolutionConfig:
     reproduce_cooldown: int = 100  # ticks between reproductions
 
     # Mutation rates (defaults, themselves evolvable)
-    body_mutation_rate: float = 0.05
-    brain_mutation_rate: float = 0.03
-    weight_perturb_scale: float = 0.3
+    body_mutation_rate: float = 0.12
+    brain_mutation_rate: float = 0.08
+    weight_perturb_scale: float = 0.5
     meta_mutation_rate: float = 0.05  # fixed rate for mutating meta-params
 
     # Body mutations
-    add_node_prob: float = 0.6
+    add_node_prob: float = 0.45
     remove_node_prob: float = 0.15
-    change_type_prob: float = 0.1
-    add_remove_edge_prob: float = 0.1
-    perturb_pos_prob: float = 0.05
-    max_body_nodes: int = 20
+    change_type_prob: float = 0.15
+    add_remove_edge_prob: float = 0.10
+    perturb_pos_prob: float = 0.15
+    max_body_nodes: int = 30
 
     # Speciation
     speciation_threshold: float = 3.0
@@ -113,9 +128,18 @@ class EvolutionConfig:
     brain_distance_weight: float = 0.5
     topology_distance_weight: float = 2.0
 
+    # Aging
+    max_age: int = 5000  # ticks before death
+    senescence_age: float = 0.6  # fraction of max_age where metabolic cost starts rising
+    senescence_max_multiplier: float = 3.0  # metabolic cost multiplier at max_age
+
     # Interaction
-    attack_damage_per_mouth: float = 5.0
+    attack_damage_per_mouth: float = 8.0
     eat_efficiency: float = 0.8  # fraction of food energy absorbed
+
+    # Sexual reproduction
+    enable_sexual_reproduction: bool = False
+    sexual_proximity: float = 50.0  # max distance for mating
 
 
 @dataclass
@@ -134,6 +158,52 @@ class SimConfig:
     recorder: RecorderConfig = field(default_factory=RecorderConfig)
 
     initial_population: int = 50
-    max_population: int = 200
+    max_population: int = 500
     max_ticks: int = 100_000
     seed: int = 42
+
+    @classmethod
+    def part2(cls, seed: int = 137) -> "SimConfig":
+        """Create Part 2 config with redesigned parameters for body diversity."""
+        return cls(
+            world=WorldConfig(
+                plant_spawn_rate=1.2,
+                plant_energy=20.0,
+                plant_min_spawn_rate=0.8,
+                initial_food_count=400,
+                meat_decay_rate=0.002,
+            ),
+            body=BodyConfig(
+                max_velocity=80.0,
+                brownian_force=5.0,
+                # Reduced structural node costs
+                cost_bone=0.01,
+                cost_sensor=0.025,
+                cost_armor=0.02,
+                cost_fat=0.005,
+                # Larger bodies
+                initial_spread=8.0,
+                new_node_offset_sigma=6.0,
+                new_node_outward_bias=0.5,
+                position_perturb_sigma=2.0,
+                # Anti-minimalism
+                size_force_scaling=True,
+                bone_drag_reduction=0.15,
+                fat_repro_bonus=0.05,
+            ),
+            brain=BrainConfig(
+                max_inputs=48,
+                inputs_per_sensor=6,
+                n_action_outputs=3,  # eat + attack + reproduce
+            ),
+            evolution=EvolutionConfig(
+                max_age=15000,
+                senescence_age=0.7,
+                enable_sexual_reproduction=True,
+                sexual_proximity=50.0,
+            ),
+            initial_population=50,
+            max_population=500,
+            max_ticks=300_000,
+            seed=seed,
+        )
