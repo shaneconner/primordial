@@ -151,8 +151,8 @@ class Body:
 
     @property
     def max_energy_capacity(self) -> float:
-        """Base energy capacity plus fat storage bonus."""
-        base = 100.0
+        """Base energy capacity plus fat storage bonus and body size scaling."""
+        base = 100.0 + self.n_nodes * self.config.energy_per_node
         fat_bonus = len(self.fat_indices) * 50.0
         return base + fat_bonus
 
@@ -170,11 +170,11 @@ class Body:
 
     @property
     def effective_max_velocity(self) -> float:
-        """Max velocity accounting for muscle-speed scaling."""
+        """Max velocity accounting for muscle-speed scaling (sqrt for diminishing returns)."""
         if not self.config.muscle_speed_scaling:
             return self.config.max_velocity
         base = self.config.base_max_velocity
-        bonus = self.muscle_ratio * self.config.muscle_velocity_bonus
+        bonus = (self.muscle_ratio ** 0.5) * self.config.muscle_velocity_bonus
         return base + bonus
 
     @property

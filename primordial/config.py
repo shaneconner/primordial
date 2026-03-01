@@ -64,6 +64,7 @@ class BodyConfig:
 
     # Eating
     eat_radius: float = 8.0  # contact distance for mouth to eat
+    attack_radius: float = 4.0  # combat contact distance (default: eat_radius * 0.5)
 
     # Brownian motion (base wandering for random-brained organisms)
     brownian_force: float = 2.0  # random force magnitude per tick
@@ -82,6 +83,7 @@ class BodyConfig:
     size_force_scaling: bool = False  # larger bodies move faster
     bone_drag_reduction: float = 0.0  # drag reduction per bone node
     fat_repro_bonus: float = 0.0  # reproduction threshold reduction per fat node
+    energy_per_node: float = 0.0  # extra energy capacity per body node
 
     # Part 3: Muscle -> Speed
     muscle_speed_scaling: bool = False  # top speed scales with muscle ratio
@@ -257,28 +259,30 @@ class SimConfig:
         """
         return cls(
             world=WorldConfig(
-                plant_spawn_rate=1.2,
+                # Bigger world for bigger organisms
+                width=2400.0,
+                height=1350.0,
+                spatial_cell_size=100.0,
+                plant_spawn_rate=2.5,
                 plant_energy=20.0,
-                plant_min_spawn_rate=0.8,
-                initial_food_count=400,
+                plant_min_spawn_rate=1.5,
+                initial_food_count=800,
+                max_resources=5000,
                 meat_decay_rate=0.002,
             ),
             body=BodyConfig(
-                # Muscle -> speed: low base vel, big bonus for muscles
+                # Muscle -> speed (sqrt diminishing returns)
                 max_velocity=80.0,
                 base_max_velocity=20.0,
                 muscle_speed_scaling=True,
-                muscle_velocity_bonus=180.0,
-                muscle_movement_base=0.2,
-                # Reduced muscle cost (was 0.06, now affordable)
-                cost_muscle_anchor=0.03,
-                # Bone reach (major buff: mouths far from COM eat much further)
+                muscle_velocity_bonus=140.0,
+                muscle_movement_base=0.35,
+                # Bone reach (mouths far from COM eat much further)
                 bone_reach_scaling=True,
                 bone_reach_factor=1.0,
-                # Armor: cheap + strong reflection
+                # Armor: cheap + strong reflection + wider combat radius
                 armor_damage_reflection=0.5,
-                cost_armor=0.01,
-                mass_armor=2.0,
+                attack_radius=6.0,
                 # Kin recognition
                 enable_kin_recognition=True,
                 offspring_immunity_ticks=50,
@@ -295,20 +299,26 @@ class SimConfig:
                 gradient_shift_rate=0.00005,
                 # Limb chain bias
                 limb_chain_bias=0.4,
-                # Larger bodies (same as Part 2)
+                # Body geometry
                 brownian_force=5.0,
                 initial_spread=8.0,
                 new_node_offset_sigma=6.0,
                 new_node_outward_bias=0.5,
                 position_perturb_sigma=2.0,
-                # Anti-minimalism (same as Part 2)
+                # Anti-minimalism: reward large bodies
                 size_force_scaling=True,
-                bone_drag_reduction=0.15,
-                fat_repro_bonus=0.05,
-                # Reduced structural costs (from Part 2, armor further reduced above)
-                cost_bone=0.01,
-                cost_sensor=0.025,
-                cost_fat=0.005,
+                bone_drag_reduction=0.3,
+                fat_repro_bonus=0.1,
+                energy_per_node=5.0,
+                # Slashed metabolic costs — extra nodes nearly free
+                cost_core=0.015,
+                cost_muscle_anchor=0.015,
+                cost_mouth=0.015,
+                cost_bone=0.005,
+                cost_sensor=0.005,
+                cost_armor=0.005,
+                cost_fat=0.002,
+                mass_armor=2.0,
             ),
             brain=BrainConfig(
                 max_inputs=48,
@@ -323,6 +333,12 @@ class SimConfig:
                 # Stronger predation
                 attack_damage_per_mouth=15.0,
                 predation_energy_transfer=0.7,
+                # Growth-biased mutations
+                body_mutation_rate=0.18,
+                add_node_prob=0.65,
+                remove_node_prob=0.05,
+                perturb_pos_prob=0.10,
+                max_body_nodes=50,
             ),
             initial_population=50,
             max_population=500,

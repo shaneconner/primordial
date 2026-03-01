@@ -312,7 +312,7 @@ class World:
 
             for mouth_idx in org.body.mouth_indices:
                 mx, my = org.body.positions[mouth_idx]
-                attack_radius = self.config.body.eat_radius * 0.5
+                attack_radius = self.config.body.attack_radius
 
                 nearby = self.organism_hash.query(mx, my, attack_radius)
                 for target in nearby:
