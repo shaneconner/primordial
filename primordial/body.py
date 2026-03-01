@@ -162,6 +162,22 @@ class Body:
         return len(self.armor_indices) * 0.15  # 15% reduction per armor node, stacks
 
     @property
+    def muscle_ratio(self) -> float:
+        """Ratio of muscle edges to total nodes (locomotion capability)."""
+        if self.n_nodes == 0:
+            return 0.0
+        return self.n_muscles / self.n_nodes
+
+    @property
+    def effective_max_velocity(self) -> float:
+        """Max velocity accounting for muscle-speed scaling."""
+        if not self.config.muscle_speed_scaling:
+            return self.config.max_velocity
+        base = self.config.base_max_velocity
+        bonus = self.muscle_ratio * self.config.muscle_velocity_bonus
+        return base + bonus
+
+    @property
     def facing_angle(self) -> float:
         """Estimate facing direction from core to average sensor/mouth position."""
         com = self.center_of_mass
@@ -244,11 +260,12 @@ class Body:
         acceleration = self.forces / self.masses[:, np.newaxis]
         self.velocities += acceleration * dt
 
-        # Velocity cap
+        # Velocity cap (uses muscle-scaled max if enabled)
+        max_vel = self.effective_max_velocity
         speed = np.sqrt(np.sum(self.velocities ** 2, axis=1))
-        too_fast = speed > self.config.max_velocity
+        too_fast = speed > max_vel
         if np.any(too_fast):
-            scale = np.where(too_fast, self.config.max_velocity / np.maximum(speed, 1e-6), 1.0)
+            scale = np.where(too_fast, max_vel / np.maximum(speed, 1e-6), 1.0)
             self.velocities *= scale[:, np.newaxis]
 
         self.positions += self.velocities * dt

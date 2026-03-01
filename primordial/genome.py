@@ -127,6 +127,7 @@ def create_default_genome(
         "brain_mutation_rate": evolution_config.brain_mutation_rate,
         "weight_perturb_scale": evolution_config.weight_perturb_scale,
         "symmetry_bias": 0.4,
+        "kin_tolerance": 0.3,  # evolvable: 0=attack all, 1=never attack kin
     }
 
     return Genome(
@@ -181,6 +182,11 @@ def _mutate_meta(g: Genome, meta_rate: float, rng: np.random.Generator) -> None:
     if rng.random() < meta_rate:
         g.meta["symmetry_bias"] += rng.normal(0, 0.05)
         g.meta["symmetry_bias"] = np.clip(g.meta["symmetry_bias"], 0.0, 1.0)
+
+    # Part 3: kin tolerance mutation
+    if "kin_tolerance" in g.meta and rng.random() < meta_rate:
+        g.meta["kin_tolerance"] += rng.normal(0, 0.08)
+        g.meta["kin_tolerance"] = float(np.clip(g.meta["kin_tolerance"], 0.0, 1.0))
 
 
 def _mutate_brain_weights(g: Genome, rng: np.random.Generator) -> None:
@@ -288,20 +294,40 @@ def _mutate_body(
 def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig | None" = None) -> None:
     """Add a new node connected to an existing node."""
     n = len(g.body_nodes)
-    parent_idx = rng.integers(0, n)
+
+    # Part 3: Limb chain bias - prefer attaching to peripheral (non-core) nodes
+    limb_bias = body_config.limb_chain_bias if body_config else 0.0
+    if limb_bias > 0 and n > 1 and rng.random() < limb_bias:
+        # Prefer bone nodes as parents (extends limb chains)
+        bone_indices = [i for i in range(n) if g.body_nodes[i]["type"] == int(NodeType.BONE)]
+        peripheral = [i for i in range(n) if g.body_nodes[i]["type"] != int(NodeType.CORE)]
+        if bone_indices:
+            parent_idx = int(rng.choice(bone_indices))
+        elif peripheral:
+            parent_idx = int(rng.choice(peripheral))
+        else:
+            parent_idx = rng.integers(0, n)
+    else:
+        parent_idx = rng.integers(0, n)
     parent = g.body_nodes[parent_idx]
 
-    # Random type (excluding CORE - only one allowed)
-    new_type = int(rng.choice([
-        NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.SENSOR,
-        NodeType.MOUTH, NodeType.FAT, NodeType.ARMOR,
-    ]))
+    # Part 3: When extending from a bone, bias toward structural types
+    if parent["type"] == int(NodeType.BONE) and limb_bias > 0 and rng.random() < 0.5:
+        new_type = int(rng.choice([
+            NodeType.BONE, NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.MOUTH,
+        ]))
+    else:
+        # Random type (excluding CORE - only one allowed)
+        new_type = int(rng.choice([
+            NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.SENSOR,
+            NodeType.MOUTH, NodeType.FAT, NodeType.ARMOR,
+        ]))
 
     # Position near parent with some offset
     sigma = body_config.new_node_offset_sigma if body_config else 1.5
     offset = rng.normal(0, sigma, 2)
 
-    # Outward bias: push new nodes away from core
+    # Outward bias: push new nodes away from core (or from parent for limb chains)
     outward_bias = body_config.new_node_outward_bias if body_config else 0.0
     if outward_bias > 0 and (parent["rx"] != 0 or parent["ry"] != 0):
         dist = max(0.01, (parent["rx"] ** 2 + parent["ry"] ** 2) ** 0.5)

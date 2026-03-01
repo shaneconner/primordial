@@ -90,6 +90,11 @@ class World:
         nutrient_cells = max(1, int(self.width / config.world.spatial_cell_size))
         self.nutrient_grid = np.zeros((nutrient_cells, nutrient_cells))
 
+        # Part 3: Environmental dynamics state
+        self._food_shock_remaining = 0  # ticks remaining in current shock
+        self._gradient_cx = config.body.gradient_center_x
+        self._gradient_cy = config.body.gradient_center_y
+
     def spawn_initial_resources(self, count: int | None = None) -> None:
         if count is None:
             count = self.config.world.initial_food_count
@@ -109,6 +114,21 @@ class World:
             spawn_rate = 0.0
         else:
             spawn_rate = self.config.world.plant_spawn_rate
+
+        # Part 3: Seasonal modulation
+        if self.config.body.enable_seasons:
+            phase = (self.tick % self.config.body.season_length) / self.config.body.season_length
+            seasonal_mult = 1.0 + self.config.body.season_food_amplitude * math.sin(2 * math.pi * phase)
+            spawn_rate *= seasonal_mult
+
+        # Part 3: Food shock
+        if self.config.body.enable_food_shocks:
+            if self._food_shock_remaining > 0:
+                spawn_rate *= self.config.body.food_shock_severity
+                self._food_shock_remaining -= 1
+            elif self.rng.random() < self.config.body.food_shock_probability:
+                self._food_shock_remaining = self.config.body.food_shock_duration
+
         # Boost if population is low
         if len(self.organisms) < self.config.world.food_boost_threshold:
             spawn_rate *= 3.0
@@ -117,6 +137,13 @@ class World:
         n_spawn = int(spawn_rate)
         if self.rng.random() < (spawn_rate - n_spawn):
             n_spawn += 1
+
+        # Part 3: Spatial gradient drift
+        if self.config.body.enable_spatial_gradient:
+            self._gradient_cx += self.rng.normal(0, self.config.body.gradient_shift_rate)
+            self._gradient_cy += self.rng.normal(0, self.config.body.gradient_shift_rate)
+            self._gradient_cx = float(np.clip(self._gradient_cx, 0.2, 0.8))
+            self._gradient_cy = float(np.clip(self._gradient_cy, 0.2, 0.8))
 
         for _ in range(n_spawn):
             # Bias spawn toward nutrient-rich areas
@@ -135,6 +162,12 @@ class World:
                 else:
                     x = self.rng.uniform(0, self.width)
                     y = self.rng.uniform(0, self.height)
+            elif self.config.body.enable_spatial_gradient and self.rng.random() < self.config.body.gradient_strength:
+                # Bias toward gradient center
+                cx = self._gradient_cx * self.width
+                cy = self._gradient_cy * self.height
+                x = float(np.clip(self.rng.normal(cx, self.width * 0.25), 0, self.width))
+                y = float(np.clip(self.rng.normal(cy, self.height * 0.25), 0, self.height))
             else:
                 x = self.rng.uniform(0, self.width)
                 y = self.rng.uniform(0, self.height)
@@ -224,8 +257,9 @@ class World:
     def handle_eating(self) -> None:
         """Process eating interactions between organisms and food."""
         eaten: set[int] = set()  # resource ids
-        eat_radius = self.config.body.eat_radius
-        r2 = eat_radius * eat_radius
+        base_eat_radius = self.config.body.eat_radius
+        bone_reach = self.config.body.bone_reach_scaling
+        reach_factor = self.config.body.bone_reach_factor
 
         for org in self.organisms:
             if not org.alive or not org.wants_to_eat():
@@ -233,9 +267,21 @@ class World:
             if org.body.n_mouths == 0:
                 continue
 
+            com = org.body.center_of_mass
+
             # Check each mouth node for contact with nearby food (via spatial hash)
             for mouth_idx in org.body.mouth_indices:
                 mx, my = org.body.positions[mouth_idx]
+
+                # Part 3: Bone reach - mouths far from COM get bigger radius
+                eat_radius = base_eat_radius
+                if bone_reach:
+                    dist_from_com = math.sqrt(
+                        (mx - com[0]) ** 2 + (my - com[1]) ** 2
+                    )
+                    eat_radius += dist_from_com * reach_factor
+
+                r2 = eat_radius * eat_radius
                 nearby = self.resource_hash.query(mx, my, eat_radius)
                 for res in nearby:
                     if id(res) in eaten:
@@ -253,6 +299,11 @@ class World:
 
     def handle_combat(self) -> None:
         """Process combat between organisms."""
+        kin_enabled = self.config.body.enable_kin_recognition
+        armor_reflect = self.config.body.armor_damage_reflection
+        energy_transfer = self.config.evolution.predation_energy_transfer
+        immunity_ticks = self.config.body.offspring_immunity_ticks
+
         for org in self.organisms:
             if not org.alive or not org.wants_to_attack():
                 continue
@@ -267,6 +318,18 @@ class World:
                 for target in nearby:
                     if target is org or not target.alive:
                         continue
+
+                    # Part 3: Kin recognition - skip same species if tolerant
+                    if kin_enabled and target.species_id == org.species_id:
+                        kin_tol = getattr(org, 'kin_tolerance', 0.0)
+                        if self.rng.random() < kin_tol:
+                            continue
+
+                    # Part 3: Offspring immunity
+                    if kin_enabled and target.age < immunity_ticks:
+                        if target.parent_id == org.id:
+                            continue
+
                     # Check if mouth actually contacts target's body
                     for ni in range(target.body.n_nodes):
                         tx, ty = target.body.positions[ni]
@@ -275,8 +338,13 @@ class World:
                         if dx * dx + dy * dy <= attack_radius * attack_radius:
                             damage = self.config.evolution.attack_damage_per_mouth
                             actual = target.take_damage(damage)
-                            # Attacker gains some energy from the bite
-                            org.eat(actual * 0.5)
+                            # Attacker gains energy from the bite
+                            org.eat(actual * energy_transfer)
+
+                            # Part 3: Armor damage reflection
+                            if armor_reflect > 0 and target.body.armor_value > 0:
+                                reflected = damage * armor_reflect * min(target.body.armor_value, 0.9)
+                                org.take_damage(reflected)
                             break
 
     def handle_deaths(self) -> None:

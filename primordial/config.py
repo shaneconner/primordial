@@ -83,6 +83,39 @@ class BodyConfig:
     bone_drag_reduction: float = 0.0  # drag reduction per bone node
     fat_repro_bonus: float = 0.0  # reproduction threshold reduction per fat node
 
+    # Part 3: Muscle -> Speed
+    muscle_speed_scaling: bool = False  # top speed scales with muscle ratio
+    base_max_velocity: float = 40.0  # base speed when muscle_speed_scaling on
+    muscle_velocity_bonus: float = 100.0  # multiplied by muscle_ratio and added to base
+
+    # Part 3: Bone -> Reach
+    bone_reach_scaling: bool = False  # mouths far from COM get bigger eat radius
+    bone_reach_factor: float = 0.3  # eat_radius += distance_from_com * factor
+
+    # Part 3: Armor damage reflection
+    armor_damage_reflection: float = 0.0  # fraction of damage reflected to attacker
+
+    # Part 3: Kin recognition
+    enable_kin_recognition: bool = False
+    offspring_immunity_ticks: int = 50  # newborns immune from parent attack
+
+    # Part 3: Environmental dynamics
+    enable_seasons: bool = False
+    season_length: int = 10000  # ticks per full season cycle
+    season_food_amplitude: float = 0.4  # ±fraction of base spawn rate
+    enable_food_shocks: bool = False
+    food_shock_probability: float = 0.0001  # per tick chance
+    food_shock_duration: int = 2000  # ticks
+    food_shock_severity: float = 0.3  # reduce spawn to this fraction
+    enable_spatial_gradient: bool = False
+    gradient_center_x: float = 0.5  # normalized [0,1]
+    gradient_center_y: float = 0.5
+    gradient_strength: float = 0.5  # 0=uniform, 1=strong gradient
+    gradient_shift_rate: float = 0.00005  # center moves per tick
+
+    # Part 3: Limb chain mutations
+    limb_chain_bias: float = 0.0  # bias for attaching to peripheral nodes
+
 
 @dataclass
 class BrainConfig:
@@ -136,6 +169,7 @@ class EvolutionConfig:
     # Interaction
     attack_damage_per_mouth: float = 8.0
     eat_efficiency: float = 0.8  # fraction of food energy absorbed
+    predation_energy_transfer: float = 0.5  # fraction of damage attacker gains as energy
 
     # Sexual reproduction
     enable_sexual_reproduction: bool = False
@@ -201,6 +235,89 @@ class SimConfig:
                 senescence_age=0.7,
                 enable_sexual_reproduction=True,
                 sexual_proximity=50.0,
+            ),
+            initial_population=50,
+            max_population=500,
+            max_ticks=300_000,
+            seed=seed,
+        )
+
+    @classmethod
+    def part3(cls, seed: int = 271) -> "SimConfig":
+        """Create Part 3 config: bodies that matter.
+
+        Builds on Part 2 with changes that make every node type earn its cost:
+        - Muscle -> speed scaling
+        - Bone -> foraging reach
+        - Stronger predation + armor reflection
+        - Kin recognition (evolvable)
+        - Environmental dynamics (seasons, shocks, gradients)
+        - Limb chain mutation bias
+        """
+        return cls(
+            world=WorldConfig(
+                plant_spawn_rate=1.2,
+                plant_energy=20.0,
+                plant_min_spawn_rate=0.8,
+                initial_food_count=400,
+                meat_decay_rate=0.002,
+            ),
+            body=BodyConfig(
+                # Base velocity lower; muscle ratio adds speed
+                max_velocity=80.0,
+                base_max_velocity=40.0,
+                muscle_speed_scaling=True,
+                muscle_velocity_bonus=100.0,
+                # Bone reach
+                bone_reach_scaling=True,
+                bone_reach_factor=0.3,
+                # Armor reflection
+                armor_damage_reflection=0.2,
+                # Kin recognition
+                enable_kin_recognition=True,
+                offspring_immunity_ticks=50,
+                # Environmental dynamics
+                enable_seasons=True,
+                season_length=10000,
+                season_food_amplitude=0.4,
+                enable_food_shocks=True,
+                food_shock_probability=0.0001,
+                food_shock_duration=2000,
+                food_shock_severity=0.3,
+                enable_spatial_gradient=True,
+                gradient_strength=0.5,
+                gradient_shift_rate=0.00005,
+                # Limb chain bias
+                limb_chain_bias=0.4,
+                # Larger bodies (same as Part 2)
+                brownian_force=5.0,
+                initial_spread=8.0,
+                new_node_offset_sigma=6.0,
+                new_node_outward_bias=0.5,
+                position_perturb_sigma=2.0,
+                # Anti-minimalism (same as Part 2)
+                size_force_scaling=True,
+                bone_drag_reduction=0.15,
+                fat_repro_bonus=0.05,
+                # Reduced structural costs (same as Part 2)
+                cost_bone=0.01,
+                cost_sensor=0.025,
+                cost_armor=0.02,
+                cost_fat=0.005,
+            ),
+            brain=BrainConfig(
+                max_inputs=48,
+                inputs_per_sensor=6,
+                n_action_outputs=3,  # eat + attack + reproduce
+            ),
+            evolution=EvolutionConfig(
+                max_age=15000,
+                senescence_age=0.7,
+                enable_sexual_reproduction=True,
+                sexual_proximity=50.0,
+                # Stronger predation
+                attack_damage_per_mouth=15.0,
+                predation_energy_transfer=0.7,
             ),
             initial_population=50,
             max_population=500,

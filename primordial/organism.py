@@ -64,6 +64,9 @@ class Organism:
 
         self.alive = True
 
+        # Part 3: Kin tolerance from genome meta
+        self.kin_tolerance = genome.meta.get("kin_tolerance", 0.0)
+
         # Outputs from last brain step (for recording/inspection)
         self.last_eat_signal = 0.0
         self.last_attack_signal = 0.0
