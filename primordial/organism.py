@@ -239,6 +239,12 @@ class Organism:
             force_scale = 1.0
             if self.config.body.size_force_scaling:
                 force_scale = (self.body.n_nodes / 3.0) ** 0.5
+            # Part 3: Movement force scales with muscle ratio
+            # No muscles = barely any movement; muscles = full movement
+            if self.config.body.muscle_speed_scaling:
+                muscle_move = self.config.body.muscle_movement_base + \
+                    (1.0 - self.config.body.muscle_movement_base) * self.body.muscle_ratio
+                force_scale *= muscle_move
             random_force = rng.normal(0, bf * force_scale, 2)
             self.body.velocities[0] += random_force / self.body.masses[0]
         self.body.step_full()

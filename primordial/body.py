@@ -159,7 +159,7 @@ class Body:
     @property
     def armor_value(self) -> float:
         """Damage reduction from armor nodes."""
-        return len(self.armor_indices) * 0.15  # 15% reduction per armor node, stacks
+        return len(self.armor_indices) * 0.2  # 20% reduction per armor node, stacks
 
     @property
     def muscle_ratio(self) -> float:

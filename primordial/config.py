@@ -87,6 +87,7 @@ class BodyConfig:
     muscle_speed_scaling: bool = False  # top speed scales with muscle ratio
     base_max_velocity: float = 40.0  # base speed when muscle_speed_scaling on
     muscle_velocity_bonus: float = 100.0  # multiplied by muscle_ratio and added to base
+    muscle_movement_base: float = 0.2  # minimum movement force fraction without muscles
 
     # Part 3: Bone -> Reach
     bone_reach_scaling: bool = False  # mouths far from COM get bigger eat radius
@@ -263,16 +264,21 @@ class SimConfig:
                 meat_decay_rate=0.002,
             ),
             body=BodyConfig(
-                # Base velocity lower; muscle ratio adds speed
+                # Muscle -> speed: low base vel, big bonus for muscles
                 max_velocity=80.0,
-                base_max_velocity=40.0,
+                base_max_velocity=20.0,
                 muscle_speed_scaling=True,
-                muscle_velocity_bonus=100.0,
-                # Bone reach
+                muscle_velocity_bonus=180.0,
+                muscle_movement_base=0.2,
+                # Reduced muscle cost (was 0.06, now affordable)
+                cost_muscle_anchor=0.03,
+                # Bone reach (major buff: mouths far from COM eat much further)
                 bone_reach_scaling=True,
-                bone_reach_factor=0.3,
-                # Armor reflection
-                armor_damage_reflection=0.2,
+                bone_reach_factor=1.0,
+                # Armor: cheap + strong reflection
+                armor_damage_reflection=0.5,
+                cost_armor=0.01,
+                mass_armor=2.0,
                 # Kin recognition
                 enable_kin_recognition=True,
                 offspring_immunity_ticks=50,
@@ -299,10 +305,9 @@ class SimConfig:
                 size_force_scaling=True,
                 bone_drag_reduction=0.15,
                 fat_repro_bonus=0.05,
-                # Reduced structural costs (same as Part 2)
+                # Reduced structural costs (from Part 2, armor further reduced above)
                 cost_bone=0.01,
                 cost_sensor=0.025,
-                cost_armor=0.02,
                 cost_fat=0.005,
             ),
             brain=BrainConfig(
