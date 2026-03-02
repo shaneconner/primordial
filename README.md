@@ -26,6 +26,6 @@ python scripts/run.py --ticks 5000 --population 50
 
 Output clips are saved to `clips/` as JSON, designed for D3.js replay visualization.
 
-## Portfolio Writeup
+## Writeup
 
 See the full writeup with interactive visualizations at [shaneconner.com/projects/primordial](https://shaneconner.com/projects/primordial).
