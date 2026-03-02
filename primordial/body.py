@@ -20,6 +20,8 @@ class NodeType(IntEnum):
     MOUTH = 4
     FAT = 5
     ARMOR = 6
+    SIGNAL = 7      # Part 4: broadcasts chemical signals (pheromones)
+    STOMACH = 8     # Part 4: improves food digestion efficiency
 
 
 class EdgeType(IntEnum):
@@ -37,6 +39,8 @@ _NODE_PROPS = {
     NodeType.MOUTH: ("mass_mouth", "cost_mouth"),
     NodeType.FAT: ("mass_fat", "cost_fat"),
     NodeType.ARMOR: ("mass_armor", "cost_armor"),
+    NodeType.SIGNAL: ("mass_signal", "cost_signal"),
+    NodeType.STOMACH: ("mass_stomach", "cost_stomach"),
 }
 
 _EDGE_STIFFNESS = {
@@ -112,9 +116,30 @@ class Body:
         self.muscle_edge_indices = np.where(self.muscle_mask)[0]
         self.fat_indices = np.where(self.node_types == NodeType.FAT)[0]
         self.armor_indices = np.where(self.node_types == NodeType.ARMOR)[0]
+        self.signal_indices = np.where(self.node_types == NodeType.SIGNAL)[0]
+        self.stomach_indices = np.where(self.node_types == NodeType.STOMACH)[0]
 
         self.n_sensors = len(self.sensor_indices)
         self.n_mouths = len(self.mouth_indices)
+        self.n_signals = len(self.signal_indices)
+        self.n_stomachs = len(self.stomach_indices)
+
+        # Part 4: Node scaling (per-node size multiplier, default 1.0)
+        if hasattr(config, 'enable_node_scaling') and config.enable_node_scaling:
+            self.node_scales = np.ones(self.n_nodes, dtype=np.float64)
+        else:
+            self.node_scales = np.ones(self.n_nodes, dtype=np.float64)
+
+        # Part 4: Node HP (per-node hit points for damage model)
+        if hasattr(config, 'enable_node_hp') and config.enable_node_hp:
+            base_hp = config.node_base_hp
+            self.node_hp = self.masses * base_hp  # HP proportional to mass
+            self.node_max_hp = self.node_hp.copy()
+            self.node_alive = np.ones(self.n_nodes, dtype=bool)
+        else:
+            self.node_hp = None
+            self.node_max_hp = None
+            self.node_alive = None
 
         # Cached values (recomputed once per tick or on mutation)
         self._total_mass = float(np.sum(self.masses))
@@ -176,6 +201,84 @@ class Body:
         base = self.config.base_max_velocity
         bonus = (self.muscle_ratio ** 0.5) * self.config.muscle_velocity_bonus
         return base + bonus
+
+    @property
+    def eat_efficiency_bonus(self) -> float:
+        """Part 4: Stomach nodes improve digestion efficiency."""
+        return len(self.stomach_indices) * 0.1  # +10% per stomach node
+
+    def damage_node(self, node_idx: int, damage: float) -> float:
+        """Part 4: Apply damage to a specific node. Returns actual damage dealt.
+
+        If node HP reaches 0, the node is disabled (still exists but non-functional).
+        """
+        if self.node_hp is None or not self.node_alive[node_idx]:
+            return 0.0
+        actual = min(damage, self.node_hp[node_idx])
+        self.node_hp[node_idx] -= actual
+        if self.node_hp[node_idx] <= 0:
+            self.node_alive[node_idx] = False
+        return actual
+
+    def regenerate_nodes(self, rate: float = 0.01) -> None:
+        """Part 4: Slowly regenerate damaged nodes."""
+        if self.node_hp is None:
+            return
+        mask = self.node_alive & (self.node_hp < self.node_max_hp)
+        if np.any(mask):
+            self.node_hp[mask] = np.minimum(
+                self.node_hp[mask] + self.node_max_hp[mask] * rate,
+                self.node_max_hp[mask],
+            )
+        # Revive nodes that have been regenerated above 50% HP
+        dead = ~self.node_alive & (self.node_hp > self.node_max_hp * 0.5)
+        if np.any(dead):
+            self.node_alive[dead] = True
+
+    def point_to_edge_distance(self, px: float, py: float) -> tuple[float, int]:
+        """Part 4: Find minimum distance from point to any edge (line segment).
+
+        Returns (distance, nearest_node_idx) where nearest_node_idx is the
+        closer endpoint of the nearest edge.
+        """
+        if self.n_edges == 0:
+            return float('inf'), -1
+
+        min_dist = float('inf')
+        nearest_node = -1
+
+        for i in range(self.n_edges):
+            a_idx = self.edge_from[i]
+            b_idx = self.edge_to[i]
+            ax, ay = self.positions[a_idx]
+            bx, by = self.positions[b_idx]
+
+            # Vector from a to b
+            abx, aby = bx - ax, by - ay
+            # Vector from a to point
+            apx, apy = px - ax, py - ay
+
+            ab_len2 = abx * abx + aby * aby
+            if ab_len2 < 1e-12:
+                # Degenerate edge, use endpoint distance
+                d2 = apx * apx + apy * apy
+            else:
+                # Project point onto line, clamp to segment
+                t = max(0.0, min(1.0, (apx * abx + apy * aby) / ab_len2))
+                closest_x = ax + t * abx
+                closest_y = ay + t * aby
+                dx = px - closest_x
+                dy = py - closest_y
+                d2 = dx * dx + dy * dy
+
+            if d2 < min_dist:
+                min_dist = d2
+                # Pick the closer endpoint for damage targeting
+                da = (px - ax) ** 2 + (py - ay) ** 2
+                db = (px - bx) ** 2 + (py - by) ** 2
+                nearest_node = a_idx if da <= db else b_idx
+
+        return min_dist ** 0.5, nearest_node
 
     @property
     def facing_angle(self) -> float:

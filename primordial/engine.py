@@ -27,6 +27,11 @@ class Engine:
     6. Reproduction - offspring creation
     7. Environment - resource spawning, decay
     8. Recording - state snapshots
+
+    Part 4 additions:
+    - Day/night cycle update
+    - Organism repulsion (after physics)
+    - Signal broadcasts, sharing, group bonuses, hazards (after combat)
     """
 
     def __init__(self, config: SimConfig | None = None):
@@ -71,7 +76,15 @@ class Engine:
         # 1. Rebuild spatial hashes
         self.world.rebuild_spatial_hashes()
 
+        # Part 4: Update day/night cycle
+        self.world.step_day_night()
+        light_level = self.world.get_light_level()
+
         # 2. Sensing and thinking (per organism)
+        enable_signals = self.config.body.enable_signals
+        enable_terrain = self.config.body.enable_terrain
+        signal_range = self.config.body.signal_range
+
         for org in self.world.organisms:
             if not org.alive:
                 continue
@@ -84,7 +97,22 @@ class Engine:
                 pos[0], pos[1], sensor_range, exclude=org
             )
 
-            inputs = org.sense(nearby_food, nearby_orgs)
+            # Part 4: Additional sense data
+            nearby_signals = None
+            terrain_type = 0
+            if enable_signals:
+                nearby_signals = self.world.get_nearby_signals(
+                    pos[0], pos[1], signal_range
+                )
+            if enable_terrain:
+                terrain_type = self.world.get_terrain_at(pos[0], pos[1])
+
+            inputs = org.sense(
+                nearby_food, nearby_orgs,
+                nearby_signals=nearby_signals,
+                terrain_type=terrain_type,
+                light_level=light_level,
+            )
             org.think(inputs)
 
         # 3. Physics
@@ -95,12 +123,22 @@ class Engine:
         # 4. Wrap positions (toroidal world)
         self.world.wrap_positions()
 
+        # 4.5 Part 4: Organism repulsion (after physics, before eating)
+        self.world.handle_organism_repulsion()
+
         # 5. Rebuild hashes after movement
         self.world.rebuild_spatial_hashes()
 
         # 6. Interactions: eating and combat
         self.world.handle_eating()
         self.world.handle_combat()
+
+        # 6.5 Part 4: Signals, sharing, group bonuses, hazards
+        self.world.handle_signals()
+        self.world.handle_sharing()
+        self.world.handle_group_bonuses()
+        self.world.handle_hazards()
+        self.world.step_hazards()
 
         # 7. Metabolism and death
         for org in self.world.organisms:

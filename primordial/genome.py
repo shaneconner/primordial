@@ -14,15 +14,20 @@ if TYPE_CHECKING:
 
 _ACTIVATION_OPTIONS = ["tanh", "relu", "sigmoid"]
 
+# All non-core node types available for mutation
+_MUTABLE_NODE_TYPES_BASE = [
+    NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.SENSOR,
+    NodeType.MOUTH, NodeType.FAT, NodeType.ARMOR,
+]
+
+# Part 4 adds SIGNAL and STOMACH
+_MUTABLE_NODE_TYPES_P4 = _MUTABLE_NODE_TYPES_BASE + [
+    NodeType.SIGNAL, NodeType.STOMACH,
+]
+
 
 class Genome:
-    """Complete genome encoding body plan, brain architecture, and meta-parameters.
-
-    The genome is the heritable blueprint. It encodes:
-    - Body: node types, relative positions, edge connectivity
-    - Brain: hidden layer size, activation function, weights, biases
-    - Meta: mutation rates and biases (themselves evolvable)
-    """
+    """Complete genome encoding body plan, brain architecture, and meta-parameters."""
 
     def __init__(
         self,
@@ -37,11 +42,8 @@ class Genome:
         brain_bias_o: np.ndarray,
         meta: dict,
     ):
-        # Body plan
-        self.body_nodes = body_nodes  # [{"type": int, "rx": float, "ry": float}, ...]
-        self.body_edges = body_edges  # [{"from": int, "to": int, "type": int}, ...]
-
-        # Brain architecture + weights
+        self.body_nodes = body_nodes
+        self.body_edges = body_edges
         self.brain_hidden_size = brain_hidden_size
         self.brain_activation = brain_activation
         self.brain_n_memory = brain_n_memory
@@ -49,8 +51,6 @@ class Genome:
         self.brain_weights_ho = brain_weights_ho.copy()
         self.brain_bias_h = brain_bias_h.copy()
         self.brain_bias_o = brain_bias_o.copy()
-
-        # Meta-parameters (evolvable)
         self.meta = dict(meta)
 
     def clone(self) -> Genome:
@@ -82,6 +82,13 @@ class Genome:
         }
 
 
+def _get_mutable_types(body_config: "BodyConfig | None") -> list:
+    """Get available node types for mutation based on config."""
+    if body_config and getattr(body_config, 'enable_signals', False):
+        return _MUTABLE_NODE_TYPES_P4
+    return _MUTABLE_NODE_TYPES_BASE
+
+
 def create_default_genome(
     body_config: BodyConfig,
     brain_config: BrainConfig,
@@ -106,17 +113,21 @@ def create_default_genome(
         {"from": 1, "to": 4, "type": int(EdgeType.BONE)},
     ]
 
-    # Count sensors and muscles
     n_sensors = sum(1 for n in body_nodes if n["type"] == int(NodeType.SENSOR))
     n_muscles = sum(1 for e in body_edges if e["type"] == int(EdgeType.MUSCLE))
     n_memory = brain_config.n_memory
 
     ips = brain_config.inputs_per_sensor
-    n_inputs = min((n_sensors * ips) + 2 + n_muscles, brain_config.max_inputs)
+    n_globals = getattr(brain_config, 'n_global_inputs', 2)
+    n_inputs = min((n_sensors * ips) + n_globals + n_muscles, brain_config.max_inputs)
     n_outputs = min(n_muscles + brain_config.n_action_outputs, brain_config.max_outputs)
     hidden = brain_config.default_hidden_size
 
-    total_in = n_inputs + n_memory
+    # Part 4: Recurrent brain adds prev_hidden to input
+    recurrent = getattr(brain_config, 'enable_recurrent', False)
+    recurrent_size = hidden if recurrent else 0
+
+    total_in = n_inputs + n_memory + recurrent_size
     total_out = n_outputs + n_memory
 
     scale_ih = np.sqrt(2.0 / (total_in + hidden))
@@ -127,8 +138,18 @@ def create_default_genome(
         "brain_mutation_rate": evolution_config.brain_mutation_rate,
         "weight_perturb_scale": evolution_config.weight_perturb_scale,
         "symmetry_bias": 0.4,
-        "kin_tolerance": 0.3,  # evolvable: 0=attack all, 1=never attack kin
+        "kin_tolerance": 0.3,
     }
+
+    # Part 4: Additional evolvable meta-parameters
+    if getattr(body_config, 'enable_signals', False):
+        sv_size = getattr(body_config, 'signal_vector_size', 3)
+        meta["signal_vector"] = rng.random(sv_size).tolist()
+    if getattr(body_config, 'enable_growth', False):
+        meta["growth_rate"] = 1.0  # multiplier on growth_interval
+    if getattr(body_config, 'enable_signatures', False):
+        sig_size = getattr(body_config, 'signature_size', 3)
+        meta["identity_signature"] = rng.random(sig_size).tolist()
 
     return Genome(
         body_nodes=body_nodes,
@@ -154,25 +175,23 @@ def mutate(
     """Apply mutations to a genome. Returns a new mutated genome."""
     g = genome.clone()
 
-    # --- Meta-parameter mutation (fixed rate) ---
-    _mutate_meta(g, evolution_config.meta_mutation_rate, rng)
-
-    # --- Brain weight mutation ---
+    _mutate_meta(g, evolution_config.meta_mutation_rate, rng, body_config)
     _mutate_brain_weights(g, rng)
-
-    # --- Brain topology mutation (hidden size / activation) ---
     _mutate_brain_topology(g, brain_config, rng)
 
-    # --- Body structural mutation ---
     if rng.random() < g.meta["body_mutation_rate"]:
         _mutate_body(g, evolution_config, rng, body_config)
-        # After body mutation, resize brain if needed
         _resize_brain_for_body(g, brain_config, rng)
+
+    # Part 4: Node scale perturbation
+    if body_config and getattr(body_config, 'enable_node_scaling', False):
+        _mutate_node_scales(g, rng, body_config)
 
     return g
 
 
-def _mutate_meta(g: Genome, meta_rate: float, rng: np.random.Generator) -> None:
+def _mutate_meta(g: Genome, meta_rate: float, rng: np.random.Generator,
+                 body_config: "BodyConfig | None" = None) -> None:
     """Mutate meta-parameters with a fixed rate."""
     for key in ["body_mutation_rate", "brain_mutation_rate", "weight_perturb_scale"]:
         if rng.random() < meta_rate:
@@ -183,10 +202,28 @@ def _mutate_meta(g: Genome, meta_rate: float, rng: np.random.Generator) -> None:
         g.meta["symmetry_bias"] += rng.normal(0, 0.05)
         g.meta["symmetry_bias"] = np.clip(g.meta["symmetry_bias"], 0.0, 1.0)
 
-    # Part 3: kin tolerance mutation
     if "kin_tolerance" in g.meta and rng.random() < meta_rate:
         g.meta["kin_tolerance"] += rng.normal(0, 0.08)
         g.meta["kin_tolerance"] = float(np.clip(g.meta["kin_tolerance"], 0.0, 1.0))
+
+    # Part 4: Signal vector mutation
+    if "signal_vector" in g.meta and rng.random() < meta_rate:
+        sv = np.array(g.meta["signal_vector"])
+        sv += rng.normal(0, 0.1, sv.shape)
+        sv = np.clip(sv, 0.0, 1.0)
+        g.meta["signal_vector"] = sv.tolist()
+
+    # Part 4: Growth rate mutation
+    if "growth_rate" in g.meta and rng.random() < meta_rate:
+        g.meta["growth_rate"] *= float(np.exp(rng.normal(0, 0.1)))
+        g.meta["growth_rate"] = float(np.clip(g.meta["growth_rate"], 0.3, 3.0))
+
+    # Part 4: Identity signature (small perturbation, partially heritable)
+    if "identity_signature" in g.meta and rng.random() < meta_rate:
+        sig = np.array(g.meta["identity_signature"])
+        sig += rng.normal(0, 0.05, sig.shape)
+        sig = np.clip(sig, 0.0, 1.0)
+        g.meta["identity_signature"] = sig.tolist()
 
 
 def _mutate_brain_weights(g: Genome, rng: np.random.Generator) -> None:
@@ -205,7 +242,6 @@ def _mutate_brain_topology(
     rng: np.random.Generator,
 ) -> None:
     """Mutate brain hidden layer size and/or activation function."""
-    # Hidden size mutation: grow or shrink by 1
     if rng.random() < brain_config.hidden_size_mutation_rate:
         delta = int(rng.choice([-1, 1]))
         new_size = g.brain_hidden_size + delta
@@ -213,10 +249,8 @@ def _mutate_brain_topology(
         if new_size != g.brain_hidden_size:
             old_h = g.brain_hidden_size
             g.brain_hidden_size = new_size
-            # Resize weight matrices
             _resize_genome_hidden(g, old_h, new_size, rng)
 
-    # Activation function mutation
     if rng.random() < brain_config.activation_mutation_rate:
         others = [a for a in _ACTIVATION_OPTIONS if a != g.brain_activation]
         g.brain_activation = str(rng.choice(others))
@@ -230,21 +264,18 @@ def _resize_genome_hidden(
     _, cols_ho = g.brain_weights_ho.shape
     copy_h = min(old_size, new_size)
 
-    # weights_ih: (total_inputs, hidden_size)
     new_wih = np.zeros((rows_ih, new_size))
     new_wih[:, :copy_h] = g.brain_weights_ih[:, :copy_h]
     if new_size > old_size:
         new_wih[:, old_size:] = rng.normal(0, 0.01, (rows_ih, new_size - old_size))
     g.brain_weights_ih = new_wih
 
-    # weights_ho: (hidden_size, total_outputs)
     new_who = np.zeros((new_size, cols_ho))
     new_who[:copy_h, :] = g.brain_weights_ho[:copy_h, :]
     if new_size > old_size:
         new_who[old_size:, :] = rng.normal(0, 0.01, (new_size - old_size, cols_ho))
     g.brain_weights_ho = new_who
 
-    # bias_h
     new_bh = np.zeros(new_size)
     new_bh[:copy_h] = g.brain_bias_h[:copy_h]
     g.brain_bias_h = new_bh
@@ -258,36 +289,29 @@ def _mutate_body(
 ) -> None:
     """Apply a single structural body mutation."""
     n_nodes = len(g.body_nodes)
-
-    # Choose mutation type by probability
     roll = rng.random()
     cumulative = 0.0
 
-    # Add node
     cumulative += config.add_node_prob
     if roll < cumulative and n_nodes < config.max_body_nodes:
         _body_add_node(g, rng, body_config)
         return
 
-    # Remove node
     cumulative += config.remove_node_prob
-    if roll < cumulative and n_nodes > 3:  # minimum 3 nodes
+    if roll < cumulative and n_nodes > 3:
         _body_remove_node(g, rng)
         return
 
-    # Change node type
     cumulative += config.change_type_prob
     if roll < cumulative:
-        _body_change_type(g, rng)
+        _body_change_type(g, rng, body_config)
         return
 
-    # Add/remove edge
     cumulative += config.add_remove_edge_prob
     if roll < cumulative:
         _body_add_remove_edge(g, rng)
         return
 
-    # Perturb position
     _body_perturb_position(g, rng, body_config)
 
 
@@ -295,10 +319,8 @@ def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig
     """Add a new node connected to an existing node."""
     n = len(g.body_nodes)
 
-    # Part 3: Limb chain bias - prefer attaching to peripheral (non-core) nodes
     limb_bias = body_config.limb_chain_bias if body_config else 0.0
     if limb_bias > 0 and n > 1 and rng.random() < limb_bias:
-        # Prefer bone nodes as parents (extends limb chains)
         bone_indices = [i for i in range(n) if g.body_nodes[i]["type"] == int(NodeType.BONE)]
         peripheral = [i for i in range(n) if g.body_nodes[i]["type"] != int(NodeType.CORE)]
         if bone_indices:
@@ -311,23 +333,19 @@ def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig
         parent_idx = rng.integers(0, n)
     parent = g.body_nodes[parent_idx]
 
-    # Part 3: When extending from a bone, bias toward structural types
+    # Get available types (includes SIGNAL/STOMACH for Part 4)
+    mutable_types = _get_mutable_types(body_config)
+
     if parent["type"] == int(NodeType.BONE) and limb_bias > 0 and rng.random() < 0.5:
         new_type = int(rng.choice([
             NodeType.BONE, NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.MOUTH,
         ]))
     else:
-        # Random type (excluding CORE - only one allowed)
-        new_type = int(rng.choice([
-            NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.SENSOR,
-            NodeType.MOUTH, NodeType.FAT, NodeType.ARMOR,
-        ]))
+        new_type = int(rng.choice(mutable_types))
 
-    # Position near parent with some offset
     sigma = body_config.new_node_offset_sigma if body_config else 1.5
     offset = rng.normal(0, sigma, 2)
 
-    # Outward bias: push new nodes away from core (or from parent for limb chains)
     outward_bias = body_config.new_node_outward_bias if body_config else 0.0
     if outward_bias > 0 and (parent["rx"] != 0 or parent["ry"] != 0):
         dist = max(0.01, (parent["rx"] ** 2 + parent["ry"] ** 2) ** 0.5)
@@ -340,19 +358,22 @@ def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig
         "ry": parent["ry"] + offset[1],
     }
 
-    # Apply symmetry bias: maybe mirror across vertical axis
+    # Part 4: Node scale (if enabled)
+    if body_config and getattr(body_config, 'enable_node_scaling', False):
+        new_node["scale"] = 1.0
+
     if rng.random() < g.meta["symmetry_bias"] and abs(new_node["rx"]) > 0.3:
         mirror_node = {
             "type": new_type,
             "rx": -new_node["rx"],
             "ry": new_node["ry"],
         }
+        if "scale" in new_node:
+            mirror_node["scale"] = new_node["scale"]
         g.body_nodes.append(new_node)
         g.body_nodes.append(mirror_node)
         new_idx = n
         mirror_idx = n + 1
-
-        # Connect both to parent
         edge_type = int(EdgeType.MUSCLE) if new_type == int(NodeType.MUSCLE_ANCHOR) else int(EdgeType.BONE)
         g.body_edges.append({"from": parent_idx, "to": new_idx, "type": edge_type})
         g.body_edges.append({"from": parent_idx, "to": mirror_idx, "type": edge_type})
@@ -366,16 +387,12 @@ def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig
 def _body_remove_node(g: Genome, rng: np.random.Generator) -> None:
     """Remove a node (not the core) and its edges, if body stays connected."""
     n = len(g.body_nodes)
-    # Don't remove core
     removable = [i for i in range(n) if g.body_nodes[i]["type"] != int(NodeType.CORE)]
     if not removable:
         return
 
     target = int(rng.choice(removable))
-
-    # Test connectivity without this node
     new_nodes = [nd for i, nd in enumerate(g.body_nodes) if i != target]
-    # Remap edge indices
     idx_map = {}
     new_i = 0
     for i in range(n):
@@ -398,25 +415,22 @@ def _body_remove_node(g: Genome, rng: np.random.Generator) -> None:
         g.body_edges = new_edges
 
 
-def _body_change_type(g: Genome, rng: np.random.Generator) -> None:
+def _body_change_type(g: Genome, rng: np.random.Generator,
+                      body_config: "BodyConfig | None" = None) -> None:
     """Change a node's type (not core)."""
     changeable = [i for i in range(len(g.body_nodes)) if g.body_nodes[i]["type"] != int(NodeType.CORE)]
     if not changeable:
         return
 
+    mutable_types = _get_mutable_types(body_config)
     target = int(rng.choice(changeable))
-    new_type = int(rng.choice([
-        NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.SENSOR,
-        NodeType.MOUTH, NodeType.FAT, NodeType.ARMOR,
-    ]))
+    new_type = int(rng.choice(mutable_types))
     g.body_nodes[target]["type"] = new_type
 
-    # If changed to/from MUSCLE_ANCHOR, update connected edge types
     for e in g.body_edges:
         if e["from"] == target or e["to"] == target:
             other = e["to"] if e["from"] == target else e["from"]
             other_type = g.body_nodes[other]["type"]
-            # Muscle edges require at least one MUSCLE_ANCHOR endpoint
             if e["type"] == int(EdgeType.MUSCLE):
                 if new_type != int(NodeType.MUSCLE_ANCHOR) and other_type != int(NodeType.MUSCLE_ANCHOR):
                     e["type"] = int(EdgeType.TENDON)
@@ -426,14 +440,12 @@ def _body_add_remove_edge(g: Genome, rng: np.random.Generator) -> None:
     """Add or remove an edge."""
     n = len(g.body_nodes)
     if rng.random() < 0.5 and len(g.body_edges) > n - 1:
-        # Remove a random edge (if body stays connected)
         idx = int(rng.integers(0, len(g.body_edges)))
         test_edges = [e for i, e in enumerate(g.body_edges) if i != idx]
         edge_tuples = [(e["from"], e["to"], e["type"]) for e in test_edges]
         if is_connected(n, edge_tuples):
             g.body_edges.pop(idx)
     else:
-        # Add edge between two unconnected nodes
         existing = {(e["from"], e["to"]) for e in g.body_edges}
         existing |= {(e["to"], e["from"]) for e in g.body_edges}
         candidates = [
@@ -442,7 +454,6 @@ def _body_add_remove_edge(g: Genome, rng: np.random.Generator) -> None:
         ]
         if candidates:
             a, b = candidates[int(rng.integers(0, len(candidates)))]
-            # Choose edge type based on endpoint types
             if (g.body_nodes[a]["type"] == int(NodeType.MUSCLE_ANCHOR) or
                     g.body_nodes[b]["type"] == int(NodeType.MUSCLE_ANCHOR)):
                 etype = int(EdgeType.MUSCLE)
@@ -453,7 +464,6 @@ def _body_add_remove_edge(g: Genome, rng: np.random.Generator) -> None:
 
 def _body_perturb_position(g: Genome, rng: np.random.Generator, body_config: "BodyConfig | None" = None) -> None:
     """Slightly shift a node's relative position."""
-    # Don't move core (it's always at 0,0)
     movable = [i for i in range(len(g.body_nodes)) if g.body_nodes[i]["type"] != int(NodeType.CORE)]
     if not movable:
         return
@@ -461,6 +471,20 @@ def _body_perturb_position(g: Genome, rng: np.random.Generator, body_config: "Bo
     sigma = body_config.position_perturb_sigma if body_config else 0.5
     g.body_nodes[target]["rx"] += rng.normal(0, sigma)
     g.body_nodes[target]["ry"] += rng.normal(0, sigma)
+
+
+def _mutate_node_scales(g: Genome, rng: np.random.Generator, body_config: BodyConfig) -> None:
+    """Part 4: Perturb individual node scale factors."""
+    min_s = body_config.min_node_scale
+    max_s = body_config.max_node_scale
+    for node in g.body_nodes:
+        if node["type"] == int(NodeType.CORE):
+            continue
+        if "scale" not in node:
+            node["scale"] = 1.0
+        if rng.random() < 0.1:  # 10% chance per node
+            node["scale"] += rng.normal(0, 0.1)
+            node["scale"] = float(np.clip(node["scale"], min_s, max_s))
 
 
 def _resize_brain_for_body(
@@ -473,26 +497,29 @@ def _resize_brain_for_body(
     n_muscles = sum(1 for e in g.body_edges if e["type"] == int(EdgeType.MUSCLE))
 
     ips = brain_config.inputs_per_sensor
-    n_inputs = min((n_sensors * ips) + 2 + n_muscles, brain_config.max_inputs)
+    n_globals = getattr(brain_config, 'n_global_inputs', 2)
+    n_inputs = min((n_sensors * ips) + n_globals + n_muscles, brain_config.max_inputs)
     n_outputs = min(n_muscles + brain_config.n_action_outputs, brain_config.max_outputs)
-    total_in = n_inputs + g.brain_n_memory
+
+    # Part 4: Recurrent adds hidden_size to input
+    recurrent = getattr(brain_config, 'enable_recurrent', False)
+    recurrent_size = g.brain_hidden_size if recurrent else 0
+
+    total_in = n_inputs + g.brain_n_memory + recurrent_size
     total_out = n_outputs + g.brain_n_memory
 
     old_in, old_h = g.brain_weights_ih.shape
     old_h2, old_out = g.brain_weights_ho.shape
     h = g.brain_hidden_size
 
-    # Resize input->hidden if input count changed
     if total_in != old_in:
         new_w = np.zeros((total_in, h))
         copy_rows = min(total_in, old_in)
         new_w[:copy_rows, :] = g.brain_weights_ih[:copy_rows, :]
-        # Initialize new rows near zero
         if total_in > old_in:
             new_w[old_in:, :] = rng.normal(0, 0.01, (total_in - old_in, h))
         g.brain_weights_ih = new_w
 
-    # Resize hidden->output if output count changed
     if total_out != old_out:
         new_w = np.zeros((h, total_out))
         copy_cols = min(total_out, old_out)
@@ -513,7 +540,6 @@ def crossover(
     rng: np.random.Generator,
 ) -> Genome:
     """Create offspring genome from two parents via crossover."""
-    # Body: use one parent's body plan as template
     if rng.random() < 0.5:
         body_parent, brain_donor = parent1, parent2
     else:
@@ -521,8 +547,6 @@ def crossover(
 
     child = body_parent.clone()
 
-    # Brain weights: randomly pick from either parent per weight
-    # Only possible if shapes match (same body plan)
     if (child.brain_weights_ih.shape == brain_donor.brain_weights_ih.shape and
             child.brain_weights_ho.shape == brain_donor.brain_weights_ho.shape):
         mask_ih = rng.random(child.brain_weights_ih.shape) < 0.5
@@ -537,26 +561,32 @@ def crossover(
         mask_bo = rng.random(child.brain_bias_o.shape) < 0.5
         child.brain_bias_o[mask_bo] = brain_donor.brain_bias_o[mask_bo]
 
-    # Meta: average
+    # Meta: average scalars, blend vectors
     for key in child.meta:
-        if key in brain_donor.meta:
-            child.meta[key] = (child.meta[key] + brain_donor.meta[key]) / 2.0
+        if key not in brain_donor.meta:
+            continue
+        val_c = child.meta[key]
+        val_d = brain_donor.meta[key]
+        if isinstance(val_c, list) and isinstance(val_d, list):
+            # Blend vector meta (signal_vector, identity_signature)
+            child.meta[key] = [
+                (a + b) / 2.0 for a, b in zip(val_c, val_d)
+            ]
+        elif isinstance(val_c, (int, float)) and isinstance(val_d, (int, float)):
+            child.meta[key] = (val_c + val_d) / 2.0
 
     return child
 
 
 def genome_distance(g1: Genome, g2: Genome, config: EvolutionConfig) -> float:
     """Compute distance between two genomes for speciation."""
-    # Body difference: compare node type histograms + node count difference
     types1 = sorted(n["type"] for n in g1.body_nodes)
     types2 = sorted(n["type"] for n in g2.body_nodes)
     body_dist = abs(len(types1) - len(types2))
-    # Count type mismatches for overlapping portion
     for t1, t2 in zip(types1, types2):
         if t1 != t2:
             body_dist += 1
 
-    # Brain weight difference (MSE of shared weights)
     min_rows = min(g1.brain_weights_ih.shape[0], g2.brain_weights_ih.shape[0])
     min_cols = min(g1.brain_weights_ih.shape[1], g2.brain_weights_ih.shape[1])
     if min_rows > 0 and min_cols > 0:
@@ -564,12 +594,18 @@ def genome_distance(g1: Genome, g2: Genome, config: EvolutionConfig) -> float:
         w2 = g2.brain_weights_ih[:min_rows, :min_cols]
         brain_dist = float(np.mean((w1 - w2) ** 2))
     else:
-        brain_dist = 10.0  # max distance if incompatible
+        brain_dist = 10.0
 
-    # Topology difference
     topo_dist = abs(g1.brain_hidden_size - g2.brain_hidden_size)
     topo_dist += (0 if g1.brain_activation == g2.brain_activation else 2)
     topo_dist += abs(len(g1.body_edges) - len(g2.body_edges))
+
+    # Part 4: Signal vector distance contributes to speciation
+    if "signal_vector" in g1.meta and "signal_vector" in g2.meta:
+        sv1 = np.array(g1.meta["signal_vector"])
+        sv2 = np.array(g2.meta["signal_vector"])
+        if sv1.shape == sv2.shape:
+            topo_dist += float(np.sum((sv1 - sv2) ** 2))
 
     return (
         config.body_distance_weight * body_dist

@@ -313,7 +313,7 @@ def run_part2(
             "snapshots": frames,
         }
 
-        filename = f"primordial-p2-{c['id']}.json"
+        filename = f"primordial-{c['id']}.json"
         filepath = os.path.join(narrative_dir, filename)
         with open(filepath, "w") as f:
             json.dump(clip_data, f, separators=(",", ":"))

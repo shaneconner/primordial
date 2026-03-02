@@ -72,6 +72,14 @@ class Organism:
         self.last_attack_signal = 0.0
         self.last_reproduce_signal = 0.0
 
+        # Part 4: Signal and social behavior
+        self.signal_vector = list(genome.meta.get("signal_vector", [0.5, 0.5, 0.5]))
+        self.signal_intensity = 0.0
+        self.identity_signature = list(genome.meta.get("identity_signature", [0.5, 0.5, 0.5]))
+        self.share_signal = 0.0
+        self.group_size = 0
+        self._damage_recent = 0.0
+
     def _build_body(
         self, genome: Genome, config: SimConfig, rng: np.random.Generator
     ) -> Body:
@@ -89,8 +97,9 @@ class Organism:
         n_muscles = self.body.n_muscles
 
         ips = config.brain.inputs_per_sensor
+        n_globals = getattr(config.brain, 'n_global_inputs', 2)
         n_inputs = min(
-            (n_sensors * ips) + 2 + n_muscles, config.brain.max_inputs
+            (n_sensors * ips) + n_globals + n_muscles, config.brain.max_inputs
         )
         n_outputs = min(n_muscles + config.brain.n_action_outputs, config.brain.max_outputs)
 
@@ -120,12 +129,18 @@ class Organism:
         self,
         nearby_food: list[tuple[float, float, float, str]],
         nearby_organisms: list[tuple[float, float, float, bool]],
+        nearby_signals: list | None = None,
+        terrain_type: int = 0,
+        light_level: float = 1.0,
     ) -> np.ndarray:
         """Gather sensory inputs from the environment.
 
         Args:
             nearby_food: List of (x, y, energy, type) for food within sensor range.
             nearby_organisms: List of (x, y, mass, same_species) for organisms in range.
+            nearby_signals: Part 4: List of (x, y, signal_vec, intensity, species_id, org_id).
+            terrain_type: Part 4: Terrain type at organism position (0-3).
+            light_level: Part 4: Current light level (0-1).
 
         Returns:
             Input vector for the brain.
@@ -146,6 +161,18 @@ class Organism:
             # More sensors = slightly better range
             sensor_range = sensor_range * (1.0 + 0.15 * (n_sensors - 1))
         per_sensor_fov = sensor_fov  # each sensor covers the full FOV band
+
+        # Part 4: Day/night reduces sensor range
+        if self.config.body.enable_day_night:
+            night_pen = self.config.body.night_sensor_penalty
+            sensor_range *= night_pen + (1.0 - night_pen) * light_level
+
+        # Part 4: Group bonus increases sensor range
+        if (self.config.body.enable_group_bonus
+                and self.group_size >= self.config.body.group_min_size):
+            bonus = 1.0 + self.config.body.group_sensor_bonus * self.group_size
+            bonus = min(bonus, self.config.body.group_sensor_cap)
+            sensor_range *= bonus
 
         # Per-sensor inputs (use math module for scalar operations - faster than numpy)
         for sensor_idx in self.body.sensor_indices:
@@ -168,7 +195,15 @@ class Organism:
                         food_dist = math.sqrt(d2)
                         food_angle = _wrap_angle(angle_to - sensor_dir) / math.pi
                         if len(food_item) > 3:
-                            food_type_val = 1.0 if food_item[3] == "plant" else -1.0
+                            ftype = food_item[3]
+                            if ftype in ("plant", "algae", "toxic"):
+                                food_type_val = 0.5
+                            elif ftype == "fruit":
+                                food_type_val = 1.0
+                            elif ftype == "meat":
+                                food_type_val = -0.5
+                            else:
+                                food_type_val = 0.0
 
             # Find nearest organism in this sensor's cone
             org_dist = sensor_range
@@ -194,10 +229,55 @@ class Organism:
                 inputs.append(org_size)
             inputs.append(org_type)
 
-        # Energy and age (normalized)
+            # Part 4: Signal inputs (ips >= 9)
+            if ips >= 9:
+                sig_dist = sensor_range
+                sig_intensity = 0.0
+                sig_similarity = 0.0
+                if nearby_signals:
+                    for sig_entry in nearby_signals:
+                        s_x, s_y = sig_entry[0], sig_entry[1]
+                        dx, dy = s_x - sx, s_y - sy
+                        d2 = dx * dx + dy * dy
+                        if d2 < sig_dist * sig_dist:
+                            angle_to = math.atan2(dy, dx)
+                            angle_diff = abs(_wrap_angle(angle_to - sensor_dir))
+                            if angle_diff < per_sensor_fov:
+                                sig_dist = math.sqrt(d2)
+                                sig_intensity = sig_entry[3]
+                                sv = sig_entry[2]
+                                if self.signal_vector and sv:
+                                    n_sv = min(len(self.signal_vector), len(sv))
+                                    sig_similarity = sum(
+                                        a * b for a, b in zip(
+                                            self.signal_vector[:n_sv], sv[:n_sv]
+                                        )
+                                    ) / max(n_sv, 1)
+                inputs.append(sig_dist / sensor_range)
+                inputs.append(sig_intensity)
+                inputs.append(sig_similarity)
+
+        # Global inputs: energy and age (always present)
         inputs.append(self.energy / self.body.max_energy_capacity)
         max_age = self.config.evolution.max_age
         inputs.append(min(self.age / max_age, 1.0))
+
+        # Part 4: Additional global inputs
+        n_globals = getattr(self.config.brain, 'n_global_inputs', 2)
+        if n_globals > 2:
+            # Velocity (normalized by max velocity)
+            max_v = max(self.body.effective_max_velocity, 1.0)
+            vel = self.body.velocities[0]
+            inputs.append(float(vel[0]) / max_v)
+            inputs.append(float(vel[1]) / max_v)
+            # Terrain type (normalized 0-1)
+            inputs.append(terrain_type / 3.0)
+            # Light level (0-1)
+            inputs.append(light_level)
+            # Group size (normalized)
+            inputs.append(min(self.group_size / 10.0, 1.0))
+            # Recent damage (normalized)
+            inputs.append(min(self._damage_recent / 20.0, 1.0))
 
         # Proprioception: current muscle lengths
         muscle_lengths = self.body.get_muscle_lengths()
@@ -220,7 +300,7 @@ class Organism:
         self.last_eat_signal = float(outputs[n_muscles]) if len(outputs) > n_muscles else 0.0
 
         if n_actions >= 3:
-            # Part 2: separate attack and reproduce signals
+            # Part 2+: separate attack and reproduce signals
             self.last_attack_signal = float(outputs[n_muscles + 1]) if len(outputs) > n_muscles + 1 else 0.0
             self.last_reproduce_signal = float(outputs[n_muscles + 2]) if len(outputs) > n_muscles + 2 else 0.0
         else:
@@ -229,6 +309,11 @@ class Organism:
             self.last_reproduce_signal = (
                 float(outputs[n_muscles + 1]) if len(outputs) > n_muscles + 1 else 0.0
             )
+
+        # Part 4: Additional action outputs (signal_intensity, share)
+        if n_actions >= 7:
+            self.signal_intensity = float(outputs[n_muscles + 3]) if len(outputs) > n_muscles + 3 else 0.0
+            self.share_signal = float(outputs[n_muscles + 4]) if len(outputs) > n_muscles + 4 else 0.0
 
     def step_physics(self, rng: np.random.Generator) -> None:
         """Advance body physics one tick with Brownian motion."""
@@ -240,7 +325,6 @@ class Organism:
             if self.config.body.size_force_scaling:
                 force_scale = (self.body.n_nodes / 3.0) ** 0.5
             # Part 3: Movement force scales with muscle ratio (sqrt for diminishing returns)
-            # First 1-2 muscles give most of the benefit; stacking muscles has less payoff
             if self.config.body.muscle_speed_scaling:
                 base = self.config.body.muscle_movement_base
                 muscle_move = base + (1.0 - base) * (self.body.muscle_ratio ** 0.5)
@@ -261,16 +345,32 @@ class Organism:
             multiplier = 1.0 + progress * (self.config.evolution.senescence_max_multiplier - 1.0)
             cost *= multiplier
 
+        # Part 4: Signal broadcasting cost
+        if (self.config.body.enable_signals
+                and self.signal_intensity > 0.1
+                and self.body.n_signals > 0):
+            cost += (self.config.body.signal_energy_cost
+                     * self.body.n_signals * self.signal_intensity)
+
         self.energy -= cost
         self.age += 1
+
+        # Part 4: Node HP regeneration
+        if self.config.body.enable_node_hp:
+            self.body.regenerate_nodes(self.config.body.node_regen_rate)
+
+        # Part 4: Damage tracking decay
+        self._damage_recent *= 0.95
 
         if self.age >= max_age or self.energy <= 0:
             self.energy = 0
             self.alive = False
 
-    def eat(self, food_energy: float) -> None:
-        """Consume food energy."""
-        gained = food_energy * self.config.evolution.eat_efficiency
+    def eat(self, food_energy: float, food_type: str = "plant") -> None:
+        """Consume food energy with efficiency from stomach nodes."""
+        eff = self.config.evolution.eat_efficiency + self.body.eat_efficiency_bonus
+        eff = min(eff, 0.95)
+        gained = food_energy * eff
         self.energy = min(self.energy + gained, self.body.max_energy_capacity)
 
     def take_damage(self, raw_damage: float) -> float:
@@ -322,6 +422,8 @@ class Organism:
             "alive": self.alive,
             "n_nodes": self.body.n_nodes,
             "n_muscles": self.body.n_muscles,
+            "signal_vector": self.signal_vector,
+            "group_size": self.group_size,
             "nodes": [
                 {
                     "x": round(float(self.body.positions[i][0]), 2),

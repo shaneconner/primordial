@@ -61,6 +61,12 @@ class BodyConfig:
     cost_mouth: float = 0.04
     cost_fat: float = 0.008
     cost_armor: float = 0.035
+    cost_signal: float = 0.01   # Part 4: signal emitter
+    cost_stomach: float = 0.01  # Part 4: digestive organ
+
+    # Node masses (Part 4 additions)
+    mass_signal: float = 0.8
+    mass_stomach: float = 1.2
 
     # Eating
     eat_radius: float = 8.0  # contact distance for mouth to eat
@@ -119,6 +125,79 @@ class BodyConfig:
     # Part 3: Limb chain mutations
     limb_chain_bias: float = 0.0  # bias for attaching to peripheral nodes
 
+    # Part 4: Terrain system
+    enable_terrain: bool = False
+    terrain_cell_size: float = 50.0  # world units per terrain cell
+    terrain_scale: float = 0.01      # Perlin noise frequency
+    terrain_drift_rate: float = 0.0  # tectonic drift per tick (0 = static)
+
+    # Part 4: Multiple food types
+    enable_food_types: bool = False
+    algae_energy: float = 10.0       # abundant, low energy
+    fruit_energy: float = 40.0       # scarce, high energy
+    fruit_spawn_fraction: float = 0.2  # fraction of spawns that are fruit
+    toxic_spawn_fraction: float = 0.08 # fraction that are toxic
+    toxic_damage: float = 15.0       # damage from eating toxic food
+
+    # Part 4: Day/night cycle
+    enable_day_night: bool = False
+    day_night_period: int = 2000     # ticks per full cycle
+    night_sensor_penalty: float = 0.4  # sensor range multiplied by this at night
+
+    # Part 4: Localized hazards
+    enable_hazards: bool = False
+    hazard_damage_per_tick: float = 1.5  # energy damage inside hazard zone
+    hazard_radius: float = 150.0
+    hazard_count: int = 3            # number of active hazard zones
+    hazard_drift_speed: float = 0.1  # movement per tick
+
+    # Part 4: Chemical signaling
+    enable_signals: bool = False
+    signal_range: float = 200.0      # broadcast radius
+    signal_energy_cost: float = 0.02  # energy per tick when broadcasting
+    signal_vector_size: int = 3      # dimensions of signal "frequency"
+
+    # Part 4: Resource sharing
+    enable_sharing: bool = False
+    share_rate: float = 2.0          # energy per tick when sharing
+    share_radius: float = 30.0       # must be within this distance
+
+    # Part 4: Group bonuses
+    enable_group_bonus: bool = False
+    group_min_size: int = 3          # minimum for bonus
+    group_radius: float = 100.0      # within this radius
+    group_sensor_bonus: float = 0.2  # +20% sensor range per group member
+    group_sensor_cap: float = 2.0    # max multiplier
+
+    # Part 4: Node HP / damage model
+    enable_node_hp: bool = False
+    node_base_hp: float = 10.0      # HP per unit mass
+    node_regen_rate: float = 0.01   # fraction of max HP regenerated per tick
+
+    # Part 4: Node scaling (variable node sizes)
+    enable_node_scaling: bool = False
+    min_node_scale: float = 0.5
+    max_node_scale: float = 3.0
+    node_scale_cost_exponent: float = 2.0  # cost scales as size^exponent
+
+    # Part 4: Growth over lifetime
+    enable_growth: bool = False
+    growth_energy_threshold: float = 0.4  # grow when energy > this fraction
+    growth_interval: int = 200            # ticks between adding nodes
+    growth_start_nodes: int = 3           # start with core + 2 nodes
+
+    # Part 4: Organism repulsion (prevent pass-through)
+    enable_organism_repulsion: bool = False
+    repulsion_stiffness: float = 5.0
+    repulsion_min_overlap: float = 2.0  # minimum overlap before force applies
+
+    # Part 4: Edge-aware combat
+    enable_edge_combat: bool = False  # check edge proximity, not just nodes
+
+    # Part 4: Individual signatures
+    enable_signatures: bool = False
+    signature_size: int = 3          # dimensions of identity vector
+
 
 @dataclass
 class BrainConfig:
@@ -130,8 +209,14 @@ class BrainConfig:
     default_activation: str = "tanh"  # tanh, relu, sigmoid
     hidden_size_mutation_rate: float = 0.05  # chance to grow/shrink hidden layer
     activation_mutation_rate: float = 0.02  # chance to switch activation fn
-    inputs_per_sensor: int = 3  # sensor inputs (Part 1: 3, Part 2: 6)
-    n_action_outputs: int = 2  # action outputs beyond muscles (Part 1: eat+repro, Part 2: eat+attack+repro)
+    inputs_per_sensor: int = 3  # sensor inputs (Part 1: 3, Part 2: 6, Part 4: 9)
+    n_action_outputs: int = 2  # action outputs beyond muscles (Part 1: 2, Part 2: 3, Part 4: 7)
+    n_global_inputs: int = 2   # global brain inputs (Part 1-3: 2, Part 4: 8)
+
+    # Part 4: Recurrent connections
+    enable_recurrent: bool = False    # hidden state feeds back as input
+    memory_decay: float = 1.0         # memory *= decay each tick (1.0=no decay, 0.95=fast fade)
+    n_modulators: int = 0             # neuromodulation outputs (scale all other outputs)
 
 
 @dataclass
@@ -343,5 +428,195 @@ class SimConfig:
             initial_population=50,
             max_population=500,
             max_ticks=300_000,
+            seed=seed,
+        )
+
+    @classmethod
+    def part4(cls, seed: int = 314) -> "SimConfig":
+        """Create Part 4 config: minds and signals.
+
+        Builds on Part 3 with:
+        - Recurrent neural networks + 8 memory registers + neuromodulation
+        - Chemical signaling (pheromone broadcasts)
+        - Multiple food types (algae, fruit, toxic)
+        - Terrain biomes (fertile, dense, rocky, water)
+        - Day/night cycle + localized hazards
+        - Resource sharing between kin
+        - Group bonuses (vigilance, intimidation)
+        - Growth over lifetime (start small, build body)
+        - Node HP + damage model (nodes can be destroyed/regenerated)
+        - Node size scaling (evolvable per-node scale)
+        - Organism repulsion (prevent pass-through)
+        - Edge-aware combat (hit body edges, not just nodes)
+        - Individual identity signatures
+        - New node types: SIGNAL (broadcast), STOMACH (digestion)
+        - Bigger world (4000x2250), longer lives (40k ticks)
+        """
+        return cls(
+            world=WorldConfig(
+                width=4000.0,
+                height=2250.0,
+                spatial_cell_size=120.0,
+                plant_spawn_rate=3.0,
+                plant_energy=20.0,
+                plant_min_spawn_rate=2.0,
+                initial_food_count=1200,
+                max_resources=8000,
+                meat_decay_rate=0.002,
+            ),
+            body=BodyConfig(
+                # ── Physics ──
+                max_velocity=80.0,
+                brownian_force=5.0,
+
+                # ── Part 3 features (all carried forward) ──
+                base_max_velocity=20.0,
+                muscle_speed_scaling=True,
+                muscle_velocity_bonus=140.0,
+                muscle_movement_base=0.35,
+                bone_reach_scaling=True,
+                bone_reach_factor=1.0,
+                armor_damage_reflection=0.5,
+                attack_radius=6.0,
+                enable_kin_recognition=True,
+                offspring_immunity_ticks=75,
+                enable_seasons=True,
+                season_length=12000,
+                season_food_amplitude=0.4,
+                enable_food_shocks=True,
+                food_shock_probability=0.0001,
+                food_shock_duration=2500,
+                food_shock_severity=0.3,
+                enable_spatial_gradient=True,
+                gradient_strength=0.5,
+                gradient_shift_rate=0.00005,
+                limb_chain_bias=0.4,
+
+                # ── Body geometry ──
+                initial_spread=8.0,
+                new_node_offset_sigma=6.0,
+                new_node_outward_bias=0.5,
+                position_perturb_sigma=2.0,
+                size_force_scaling=True,
+                bone_drag_reduction=0.3,
+                fat_repro_bonus=0.1,
+                energy_per_node=5.0,
+
+                # ── Metabolic costs ──
+                cost_core=0.012,
+                cost_muscle_anchor=0.012,
+                cost_mouth=0.012,
+                cost_bone=0.004,
+                cost_sensor=0.004,
+                cost_armor=0.004,
+                cost_fat=0.002,
+                cost_signal=0.008,
+                cost_stomach=0.008,
+                mass_armor=2.0,
+                mass_signal=0.8,
+                mass_stomach=1.2,
+
+                # ── Part 4: Terrain ──
+                enable_terrain=True,
+                terrain_cell_size=50.0,
+                terrain_scale=0.008,
+                terrain_drift_rate=0.00001,
+
+                # ── Part 4: Multiple food types ──
+                enable_food_types=True,
+                algae_energy=10.0,
+                fruit_energy=40.0,
+                fruit_spawn_fraction=0.2,
+                toxic_spawn_fraction=0.08,
+                toxic_damage=15.0,
+
+                # ── Part 4: Day/night ──
+                enable_day_night=True,
+                day_night_period=2000,
+                night_sensor_penalty=0.4,
+
+                # ── Part 4: Hazards ──
+                enable_hazards=True,
+                hazard_damage_per_tick=1.5,
+                hazard_radius=150.0,
+                hazard_count=3,
+                hazard_drift_speed=0.1,
+
+                # ── Part 4: Chemical signaling ──
+                enable_signals=True,
+                signal_range=200.0,
+                signal_energy_cost=0.02,
+                signal_vector_size=3,
+
+                # ── Part 4: Resource sharing ──
+                enable_sharing=True,
+                share_rate=2.0,
+                share_radius=30.0,
+
+                # ── Part 4: Group bonuses ──
+                enable_group_bonus=True,
+                group_min_size=3,
+                group_radius=100.0,
+                group_sensor_bonus=0.2,
+                group_sensor_cap=2.0,
+
+                # ── Part 4: Node HP ──
+                enable_node_hp=True,
+                node_base_hp=10.0,
+                node_regen_rate=0.01,
+
+                # ── Part 4: Node scaling ──
+                enable_node_scaling=True,
+                min_node_scale=0.5,
+                max_node_scale=3.0,
+                node_scale_cost_exponent=2.0,
+
+                # ── Part 4: Growth ──
+                enable_growth=True,
+                growth_energy_threshold=0.4,
+                growth_interval=200,
+                growth_start_nodes=3,
+
+                # ── Part 4: Collision ──
+                enable_organism_repulsion=True,
+                repulsion_stiffness=5.0,
+                repulsion_min_overlap=2.0,
+                enable_edge_combat=True,
+
+                # ── Part 4: Identity ──
+                enable_signatures=True,
+                signature_size=3,
+            ),
+            brain=BrainConfig(
+                max_hidden_size=48,
+                max_inputs=96,
+                max_outputs=32,
+                n_memory=8,
+                default_hidden_size=24,
+                inputs_per_sensor=9,
+                n_action_outputs=7,
+                n_global_inputs=8,
+                enable_recurrent=True,
+                memory_decay=0.95,
+                n_modulators=2,
+            ),
+            evolution=EvolutionConfig(
+                max_age=40000,
+                senescence_age=0.75,
+                enable_sexual_reproduction=True,
+                sexual_proximity=60.0,
+                attack_damage_per_mouth=15.0,
+                predation_energy_transfer=0.7,
+                eat_efficiency=0.6,
+                body_mutation_rate=0.20,
+                add_node_prob=0.60,
+                remove_node_prob=0.05,
+                perturb_pos_prob=0.10,
+                max_body_nodes=70,
+                speciation_threshold=4.0,
+            ),
+            initial_population=60,
+            max_population=600,
+            max_ticks=500_000,
             seed=seed,
         )

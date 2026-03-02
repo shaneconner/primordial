@@ -7,10 +7,11 @@ Runs the simulation once and outputs:
   4. Event log (JSON) - all detected evolutionary events
 
 Usage:
-  python scripts/export_full.py [ticks] [seed] [--part2] [--part3] [--frame-interval N]
+  python scripts/export_full.py [ticks] [seed] [--part2] [--part3] [--part4] [--frame-interval N]
   python scripts/export_full.py 100000 42                    # Part 1 defaults
   python scripts/export_full.py 300000 137 --part2           # Part 2
   python scripts/export_full.py 300000 271 --part3           # Part 3
+  python scripts/export_full.py 500000 314 --part4           # Part 4
   python scripts/export_full.py 100000 42 --frame-interval 1 # Every tick (full video)
 """
 
@@ -26,7 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from primordial.config import SimConfig
 from primordial.engine import Engine
 
-NODE_TYPE_NAMES = ["core", "bone", "muscle", "sensor", "mouth", "fat", "armor"]
+NODE_TYPE_NAMES = ["core", "bone", "muscle", "sensor", "mouth", "fat", "armor", "signal", "stomach"]
 
 SITE_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -200,6 +201,7 @@ def run_full_export(
     seed=42,
     part2=False,
     part3=False,
+    part4=False,
     frame_interval=2,
     sample_interval=100,
     clip_frames=500,
@@ -208,7 +210,11 @@ def run_full_export(
     """Single-pass export: full frames + timeline + events + narrative clips."""
 
     # Config
-    if part3:
+    if part4:
+        config = SimConfig.part4(seed=seed)
+        part_label = "Part 4"
+        part_suffix = "-p4"
+    elif part3:
         config = SimConfig.part3(seed=seed)
         part_label = "Part 3"
         part_suffix = "-p3"
@@ -237,16 +243,23 @@ def run_full_export(
     print(f"  Ticks: {ticks}, Seed: {seed}")
     print(f"  Frame interval: every {frame_interval} ticks")
     print(f"  Timeline sample: every {sample_interval} ticks")
-    if part2 or part3:
+    if part2 or part3 or part4:
         print(f"  Config: spread={config.body.initial_spread}, "
               f"sensors={config.brain.inputs_per_sensor}ips, "
               f"actions={config.brain.n_action_outputs}, max_age={config.evolution.max_age}")
-    if part3:
+    if part3 or part4:
         print(f"  Part 3 features: muscle_speed={config.body.muscle_speed_scaling}, "
               f"bone_reach={config.body.bone_reach_scaling}, "
               f"seasons={config.body.enable_seasons}, "
               f"kin_recognition={config.body.enable_kin_recognition}, "
               f"attack_dmg={config.evolution.attack_damage_per_mouth}")
+    if part4:
+        print(f"  Part 4 features: terrain={config.body.enable_terrain}, "
+              f"food_types={config.body.enable_food_types}, "
+              f"day_night={config.body.enable_day_night}, "
+              f"signals={config.body.enable_signals}, "
+              f"recurrent={config.brain.enable_recurrent}, "
+              f"repulsion={config.body.enable_organism_repulsion}")
     print(f"  Output: {frames_dir}")
     print()
 
@@ -608,6 +621,7 @@ if __name__ == "__main__":
     parser.add_argument("seed", type=int, nargs="?", default=42, help="Random seed")
     parser.add_argument("--part2", action="store_true", help="Use Part 2 config")
     parser.add_argument("--part3", action="store_true", help="Use Part 3 config")
+    parser.add_argument("--part4", action="store_true", help="Use Part 4 config")
     parser.add_argument("--frame-interval", type=int, default=2,
                         help="Capture frame every N ticks (1=every tick, 2=default)")
     parser.add_argument("--sample-interval", type=int, default=100,
@@ -622,6 +636,7 @@ if __name__ == "__main__":
         seed=args.seed,
         part2=args.part2,
         part3=args.part3,
+        part4=args.part4,
         frame_interval=args.frame_interval,
         sample_interval=args.sample_interval,
         clip_frames=args.clip_frames,

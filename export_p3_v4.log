@@ -1,0 +1,353 @@
+=== SINGLE-PASS EXPORT: Part 3 ===
+  Ticks: 300000, Seed: 271
+  Frame interval: every 4 ticks
+  Timeline sample: every 100 ticks
+  Config: spread=8.0, sensors=6ips, actions=3, max_age=15000
+  Part 3 features: muscle_speed=True, bone_reach=True, seasons=True, kin_recognition=True, attack_dmg=15.0
+  Output: C:\Users\shane\primordial\..\shaneconner-site\data\full-frames-p3
+
+  Tick    1000: pop=175, species=39, gen=  6, frames=   250, events=  51, 21 t/s
+  Tick    2000: pop=462, species=106, gen= 13, frames=   500, events= 215, 10 t/s
+  Tick    3000: pop=399, species=139, gen= 21, frames=   750, events= 455, 7 t/s
+  Tick    4000: pop=304, species=140, gen= 27, frames=  1000, events= 658, 6 t/s
+  Tick    5000: pop=229, species=106, gen= 34, frames=  1250, events= 805, 7 t/s
+  Tick    6000: pop=183, species=86, gen= 43, frames=  1500, events= 903, 7 t/s
+  Tick    7000: pop=217, species=87, gen= 52, frames=  1750, events=1008, 7 t/s
+  Tick    8000: pop=240, species=103, gen= 62, frames=  2000, events=1132, 8 t/s
+  Tick    9000: pop=225, species=99, gen= 72, frames=  2250, events=1240, 8 t/s
+  Tick   10000: pop=219, species=90, gen= 76, frames=  2500, events=1364, 8 t/s
+  Tick   11000: pop=234, species=95, gen= 68, frames=  2750, events=1457, 8 t/s
+  Tick   12000: pop=285, species=104, gen= 77, frames=  3000, events=1600, 8 t/s
+  Tick   13000: pop=250, species=98, gen= 76, frames=  3250, events=1726, 8 t/s
+  Tick   14000: pop=313, species=108, gen= 81, frames=  3500, events=1848, 7 t/s
+  Tick   15000: pop=333, species=123, gen= 85, frames=  3750, events=2027, 7 t/s
+  Tick   16000: pop=284, species=106, gen= 68, frames=  4000, events=2157, 7 t/s
+  Tick   17000: pop=235, species=90, gen= 71, frames=  4250, events=2279, 7 t/s
+  Tick   18000: pop=209, species=81, gen= 72, frames=  4500, events=2378, 6 t/s
+  Tick   19000: pop=187, species=72, gen= 73, frames=  4750, events=2459, 6 t/s
+  Tick   20000: pop=203, species=76, gen= 75, frames=  5000, events=2523, 6 t/s
+  Tick   21000: pop=226, species=80, gen= 68, frames=  5250, events=2624, 6 t/s
+  Tick   22000: pop=236, species=93, gen= 74, frames=  5500, events=2738, 6 t/s
+  Tick   23000: pop=282, species=99, gen= 84, frames=  5750, events=2854, 6 t/s
+  Tick   24000: pop=265, species=112, gen= 79, frames=  6000, events=2984, 6 t/s
+  Tick   25000: pop=217, species=87, gen= 81, frames=  6250, events=3075, 6 t/s
+  Tick   26000: pop=176, species=76, gen= 79, frames=  6500, events=3147, 6 t/s
+  Tick   27000: pop=158, species=66, gen= 82, frames=  6750, events=3204, 6 t/s
+  Tick   28000: pop=155, species=63, gen= 84, frames=  7000, events=3246, 6 t/s
+  Tick   29000: pop=117, species=50, gen= 90, frames=  7250, events=3299, 6 t/s
+  Tick   30000: pop=154, species=59, gen= 94, frames=  7500, events=3351, 6 t/s
+  Tick   31000: pop=218, species=78, gen=100, frames=  7750, events=3428, 6 t/s
+  Tick   32000: pop=269, species=98, gen=102, frames=  8000, events=3552, 6 t/s
+  Tick   33000: pop=238, species=87, gen=105, frames=  8250, events=3674, 6 t/s
+  Tick   34000: pop=207, species=74, gen=104, frames=  8500, events=3767, 6 t/s
+  Tick   35000: pop=181, species=80, gen=104, frames=  8750, events=3858, 6 t/s
+  Tick   36000: pop=146, species=56, gen=104, frames=  9000, events=3919, 6 t/s
+  Tick   37000: pop=116, species=48, gen=104, frames=  9250, events=3966, 6 t/s
+  Tick   38000: pop=111, species=44, gen=104, frames=  9500, events=4002, 6 t/s
+  Tick   39000: pop=119, species=45, gen=100, frames=  9750, events=4040, 6 t/s
+  Tick   40000: pop=102, species=41, gen=106, frames= 10000, events=4077, 6 t/s
+  Tick   41000: pop=118, species=42, gen=107, frames= 10250, events=4124, 6 t/s
+  Tick   42000: pop=142, species=50, gen=106, frames= 10500, events=4194, 6 t/s
+  Tick   43000: pop=150, species=55, gen=108, frames= 10750, events=4269, 6 t/s
+  Tick   44000: pop=147, species=51, gen=110, frames= 11000, events=4342, 6 t/s
+  Tick   45000: pop=146, species=50, gen=112, frames= 11250, events=4410, 6 t/s
+  Tick   46000: pop=111, species=40, gen=112, frames= 11500, events=4469, 6 t/s
+  Tick   47000: pop=100, species=35, gen=115, frames= 11750, events=4514, 6 t/s
+  Tick   48000: pop= 98, species=32, gen=116, frames= 12000, events=4546, 6 t/s
+  Tick   49000: pop=100, species=25, gen=116, frames= 12250, events=4579, 7 t/s
+  Tick   50000: pop=114, species=29, gen=118, frames= 12500, events=4628, 7 t/s
+  Tick   51000: pop=125, species=34, gen=121, frames= 12750, events=4673, 7 t/s
+  Tick   52000: pop=153, species=36, gen=122, frames= 13000, events=4736, 7 t/s
+  Tick   53000: pop=162, species=34, gen=128, frames= 13250, events=4799, 7 t/s
+  Tick   54000: pop=153, species=25, gen=112, frames= 13500, events=4847, 7 t/s
+  Tick   55000: pop=137, species=26, gen=112, frames= 13750, events=4883, 7 t/s
+  Tick   56000: pop=133, species=30, gen=111, frames= 14000, events=4942, 7 t/s
+  Tick   57000: pop=107, species=26, gen=114, frames= 14250, events=4990, 7 t/s
+  Tick   58000: pop=113, species=22, gen=113, frames= 14500, events=5020, 7 t/s
+  Tick   59000: pop=103, species=23, gen=112, frames= 14750, events=5062, 7 t/s
+  Tick   60000: pop=122, species=28, gen=114, frames= 15000, events=5108, 7 t/s
+  Tick   61000: pop=133, species=27, gen=116, frames= 15250, events=5156, 7 t/s
+  Tick   62000: pop=138, species=26, gen=117, frames= 15500, events=5198, 7 t/s
+  Tick   63000: pop=147, species=36, gen=119, frames= 15750, events=5261, 7 t/s
+  Tick   64000: pop=158, species=31, gen=119, frames= 16000, events=5321, 7 t/s
+  Tick   65000: pop=116, species=16, gen=121, frames= 16250, events=5372, 7 t/s
+  Tick   66000: pop=122, species=21, gen=123, frames= 16500, events=5406, 7 t/s
+  Tick   67000: pop=128, species=25, gen=126, frames= 16750, events=5463, 7 t/s
+  Tick   68000: pop=120, species=25, gen=126, frames= 17000, events=5503, 7 t/s
+  Tick   69000: pop=126, species=26, gen=127, frames= 17250, events=5559, 7 t/s
+  Tick   70000: pop=158, species=28, gen=129, frames= 17500, events=5603, 7 t/s
+  Tick   71000: pop=167, species=30, gen=129, frames= 17750, events=5656, 7 t/s
+  Tick   72000: pop=179, species=28, gen=131, frames= 18000, events=5718, 7 t/s
+  Tick   73000: pop=182, species=29, gen=131, frames= 18250, events=5788, 7 t/s
+  Tick   74000: pop=168, species=30, gen=132, frames= 18500, events=5853, 7 t/s
+  Tick   75000: pop=185, species=25, gen=134, frames= 18750, events=5916, 7 t/s
+  Tick   76000: pop=158, species=28, gen=134, frames= 19000, events=5972, 7 t/s
+  Tick   77000: pop=129, species=32, gen=136, frames= 19250, events=6023, 7 t/s
+  Tick   78000: pop=138, species=33, gen=135, frames= 19500, events=6063, 7 t/s
+  Tick   79000: pop=179, species=35, gen=137, frames= 19750, events=6115, 7 t/s
+  Tick   80000: pop=182, species=31, gen=137, frames= 20000, events=6169, 7 t/s
+  Tick   81000: pop=222, species=48, gen=137, frames= 20250, events=6244, 7 t/s
+  Tick   82000: pop=206, species=36, gen=137, frames= 20500, events=6318, 7 t/s
+  Tick   83000: pop=232, species=50, gen=138, frames= 20750, events=6412, 7 t/s
+  Tick   84000: pop=249, species=38, gen=139, frames= 21000, events=6499, 7 t/s
+  Tick   85000: pop=225, species=36, gen=138, frames= 21250, events=6574, 7 t/s
+  Tick   86000: pop=202, species=25, gen=139, frames= 21500, events=6634, 7 t/s
+  Tick   87000: pop=171, species=30, gen=140, frames= 21750, events=6689, 7 t/s
+  Tick   88000: pop=184, species=24, gen=132, frames= 22000, events=6741, 7 t/s
+  Tick   89000: pop=160, species=23, gen=132, frames= 22250, events=6792, 7 t/s
+  Tick   90000: pop=198, species=28, gen=134, frames= 22500, events=6865, 7 t/s
+  Tick   91000: pop=209, species=41, gen=136, frames= 22750, events=6934, 7 t/s
+  Tick   92000: pop=212, species=32, gen=134, frames= 23000, events=7001, 7 t/s
+  Tick   93000: pop=226, species=40, gen=134, frames= 23250, events=7085, 7 t/s
+  Tick   94000: pop=216, species=30, gen=137, frames= 23500, events=7151, 7 t/s
+  Tick   95000: pop=205, species=31, gen=133, frames= 23750, events=7229, 7 t/s
+  Tick   96000: pop=211, species=29, gen=135, frames= 24000, events=7290, 7 t/s
+  Tick   97000: pop=175, species=20, gen=138, frames= 24250, events=7356, 7 t/s
+  Tick   98000: pop=163, species=22, gen=138, frames= 24500, events=7402, 7 t/s
+  Tick   99000: pop=184, species=21, gen=137, frames= 24750, events=7449, 7 t/s
+  Tick  100000: pop=180, species=19, gen=137, frames= 25000, events=7506, 7 t/s
+  Tick  101000: pop=161, species=14, gen=138, frames= 25250, events=7554, 7 t/s
+  Tick  102000: pop=170, species=26, gen=139, frames= 25500, events=7608, 7 t/s
+  Tick  103000: pop=207, species=36, gen=140, frames= 25750, events=7659, 7 t/s
+  Tick  104000: pop=235, species=34, gen=141, frames= 26000, events=7727, 7 t/s
+  Tick  105000: pop=222, species=37, gen=142, frames= 26250, events=7799, 7 t/s
+  Tick  106000: pop=220, species=34, gen=142, frames= 26500, events=7862, 7 t/s
+  Tick  107000: pop=183, species=30, gen=142, frames= 26750, events=7939, 7 t/s
+  Tick  108000: pop=192, species=25, gen=145, frames= 27000, events=7997, 7 t/s
+  Tick  109000: pop=203, species=27, gen=147, frames= 27250, events=8059, 7 t/s
+  Tick  110000: pop=233, species=27, gen=144, frames= 27500, events=8122, 7 t/s
+  Tick  111000: pop=242, species=29, gen=146, frames= 27750, events=8190, 7 t/s
+  Tick  112000: pop=251, species=35, gen=147, frames= 28000, events=8281, 7 t/s
+  Tick  113000: pop=243, species=25, gen=146, frames= 28250, events=8351, 7 t/s
+  Tick  114000: pop=244, species=36, gen=146, frames= 28500, events=8438, 7 t/s
+  Tick  115000: pop=234, species=27, gen=148, frames= 28750, events=8512, 7 t/s
+  Tick  116000: pop=226, species=28, gen=148, frames= 29000, events=8587, 7 t/s
+  Tick  117000: pop=202, species=25, gen=149, frames= 29250, events=8654, 7 t/s
+  Tick  118000: pop=201, species=30, gen=150, frames= 29500, events=8714, 7 t/s
+  Tick  119000: pop=203, species=27, gen=153, frames= 29750, events=8770, 7 t/s
+  Tick  120000: pop=212, species=34, gen=155, frames= 30000, events=8832, 7 t/s
+  Tick  121000: pop=230, species=30, gen=156, frames= 30250, events=8891, 7 t/s
+  Tick  122000: pop=193, species=30, gen=157, frames= 30500, events=8948, 7 t/s
+  Tick  123000: pop=185, species=27, gen=159, frames= 30750, events=9011, 7 t/s
+  Tick  124000: pop=234, species=37, gen=161, frames= 31000, events=9075, 7 t/s
+  Tick  125000: pop=253, species=37, gen=162, frames= 31250, events=9146, 7 t/s
+  Tick  126000: pop=251, species=31, gen=163, frames= 31500, events=9204, 7 t/s
+  Tick  127000: pop=213, species=39, gen=163, frames= 31750, events=9281, 7 t/s
+  Tick  128000: pop=201, species=34, gen=164, frames= 32000, events=9331, 7 t/s
+  Tick  129000: pop=177, species=32, gen=165, frames= 32250, events=9388, 7 t/s
+  Tick  130000: pop=178, species=40, gen=165, frames= 32500, events=9446, 7 t/s
+  Tick  131000: pop=224, species=36, gen=166, frames= 32750, events=9487, 7 t/s
+  Tick  132000: pop=221, species=41, gen=167, frames= 33000, events=9554, 7 t/s
+  Tick  133000: pop=221, species=47, gen=167, frames= 33250, events=9618, 7 t/s
+  Tick  134000: pop=209, species=32, gen=167, frames= 33500, events=9662, 7 t/s
+  Tick  135000: pop=194, species=32, gen=166, frames= 33750, events=9710, 7 t/s
+  Tick  136000: pop=166, species=35, gen=166, frames= 34000, events=9760, 7 t/s
+  Tick  137000: pop=144, species=35, gen=167, frames= 34250, events=9802, 7 t/s
+  Tick  138000: pop=126, species=27, gen=168, frames= 34500, events=9834, 7 t/s
+  Tick  139000: pop=145, species=26, gen=167, frames= 34750, events=9864, 7 t/s
+  Tick  140000: pop=179, species=21, gen=168, frames= 35000, events=9902, 7 t/s
+  Tick  141000: pop=184, species=27, gen=169, frames= 35250, events=9950, 7 t/s
+  Tick  142000: pop=204, species=30, gen=169, frames= 35500, events=10002, 7 t/s
+  Tick  143000: pop=181, species=27, gen=171, frames= 35750, events=10063, 7 t/s
+  Tick  144000: pop=154, species=32, gen=174, frames= 36000, events=10110, 7 t/s
+  Tick  145000: pop=136, species=28, gen=171, frames= 36250, events=10149, 7 t/s
+  Tick  146000: pop=124, species=24, gen=171, frames= 36500, events=10183, 7 t/s
+  Tick  147000: pop=135, species=23, gen=173, frames= 36750, events=10209, 7 t/s
+  Tick  148000: pop=136, species=21, gen=174, frames= 37000, events=10239, 7 t/s
+  Tick  149000: pop=138, species=23, gen=173, frames= 37250, events=10270, 7 t/s
+  Tick  150000: pop=135, species=30, gen=174, frames= 37500, events=10311, 7 t/s
+  Tick  151000: pop=141, species=25, gen=162, frames= 37750, events=10337, 7 t/s
+  Tick  152000: pop=168, species=27, gen=164, frames= 38000, events=10388, 7 t/s
+  Tick  153000: pop=181, species=26, gen=166, frames= 38250, events=10428, 7 t/s
+  Tick  154000: pop=171, species=27, gen=166, frames= 38500, events=10467, 7 t/s
+  Tick  155000: pop=149, species=25, gen=165, frames= 38750, events=10495, 7 t/s
+  Tick  156000: pop=127, species=20, gen=168, frames= 39000, events=10516, 7 t/s
+  Tick  157000: pop= 98, species=18, gen=159, frames= 39250, events=10546, 7 t/s
+  Tick  158000: pop=104, species=19, gen=158, frames= 39500, events=10567, 7 t/s
+  Tick  159000: pop=112, species=18, gen=157, frames= 39750, events=10585, 7 t/s
+  Tick  160000: pop=130, species=20, gen=159, frames= 40000, events=10612, 7 t/s
+  Tick  161000: pop=171, species=19, gen=160, frames= 40250, events=10642, 7 t/s
+  Tick  162000: pop=183, species=21, gen=164, frames= 40500, events=10684, 7 t/s
+  Tick  163000: pop=195, species=24, gen=164, frames= 40750, events=10725, 7 t/s
+  Tick  164000: pop=180, species=25, gen=165, frames= 41000, events=10782, 7 t/s
+  Tick  165000: pop=153, species=25, gen=166, frames= 41250, events=10824, 7 t/s
+  Tick  166000: pop=142, species=21, gen=169, frames= 41500, events=10855, 7 t/s
+  Tick  167000: pop=132, species=19, gen=170, frames= 41750, events=10885, 7 t/s
+  Tick  168000: pop=109, species=22, gen=168, frames= 42000, events=10910, 7 t/s
+  Tick  169000: pop=103, species=18, gen=171, frames= 42250, events=10925, 7 t/s
+  Tick  170000: pop=125, species=16, gen=173, frames= 42500, events=10946, 7 t/s
+  Tick  171000: pop=178, species=30, gen=173, frames= 42750, events=10997, 7 t/s
+  Tick  172000: pop=189, species=33, gen=173, frames= 43000, events=11047, 7 t/s
+  Tick  173000: pop=174, species=28, gen=165, frames= 43250, events=11089, 7 t/s
+  Tick  174000: pop=157, species=32, gen=163, frames= 43500, events=11140, 7 t/s
+  Tick  175000: pop=178, species=21, gen=163, frames= 43750, events=11182, 7 t/s
+  Tick  176000: pop=149, species=23, gen=163, frames= 44000, events=11222, 7 t/s
+  Tick  177000: pop=138, species=18, gen=165, frames= 44250, events=11243, 7 t/s
+  Tick  178000: pop=104, species=16, gen=163, frames= 44500, events=11269, 7 t/s
+  Tick  179000: pop= 91, species=20, gen=162, frames= 44750, events=11296, 7 t/s
+  Tick  180000: pop= 91, species=17, gen=165, frames= 45000, events=11313, 7 t/s
+  Tick  181000: pop=114, species=20, gen=166, frames= 45250, events=11333, 7 t/s
+  Tick  182000: pop= 99, species=18, gen=164, frames= 45500, events=11354, 7 t/s
+  Tick  183000: pop=124, species=21, gen=164, frames= 45750, events=11380, 7 t/s
+  Tick  184000: pop=159, species=18, gen=165, frames= 46000, events=11402, 7 t/s
+  Tick  185000: pop=146, species=18, gen=167, frames= 46250, events=11424, 7 t/s
+  Tick  186000: pop=120, species=22, gen=166, frames= 46500, events=11444, 7 t/s
+  Tick  187000: pop= 93, species=15, gen=165, frames= 46750, events=11464, 7 t/s
+  Tick  188000: pop= 89, species=12, gen=164, frames= 47000, events=11473, 7 t/s
+  Tick  189000: pop= 77, species=15, gen=165, frames= 47250, events=11492, 7 t/s
+  Tick  190000: pop=122, species=13, gen=164, frames= 47500, events=11498, 7 t/s
+  Tick  191000: pop=148, species=16, gen=164, frames= 47750, events=11522, 7 t/s
+  Tick  192000: pop=163, species=21, gen=164, frames= 48000, events=11542, 7 t/s
+  Tick  193000: pop=173, species=25, gen=165, frames= 48250, events=11570, 7 t/s
+  Tick  194000: pop=123, species=14, gen=165, frames= 48500, events=11590, 7 t/s
+  Tick  195000: pop=101, species=17, gen=166, frames= 48750, events=11603, 7 t/s
+  Tick  196000: pop= 98, species=14, gen=166, frames= 49000, events=11623, 7 t/s
+  Tick  197000: pop= 92, species=16, gen=166, frames= 49250, events=11631, 7 t/s
+  Tick  198000: pop= 91, species=21, gen=166, frames= 49500, events=11650, 7 t/s
+  Tick  199000: pop= 85, species=17, gen=166, frames= 49750, events=11662, 7 t/s
+  Tick  200000: pop= 80, species=13, gen=167, frames= 50000, events=11675, 7 t/s
+  Tick  201000: pop=107, species=22, gen=168, frames= 50250, events=11693, 7 t/s
+  Tick  202000: pop=140, species=25, gen=168, frames= 50500, events=11721, 7 t/s
+  Tick  203000: pop=148, species=28, gen=167, frames= 50750, events=11750, 8 t/s
+  Tick  204000: pop= 94, species=20, gen=166, frames= 51000, events=11772, 8 t/s
+  Tick  205000: pop= 85, species=21, gen=166, frames= 51250, events=11791, 8 t/s
+  Tick  206000: pop=108, species=20, gen=170, frames= 51500, events=11811, 8 t/s
+  Tick  207000: pop= 99, species=19, gen=171, frames= 51750, events=11826, 8 t/s
+  Tick  208000: pop= 94, species=19, gen=172, frames= 52000, events=11843, 8 t/s
+  Tick  209000: pop=109, species=22, gen=174, frames= 52250, events=11865, 8 t/s
+  Tick  210000: pop=151, species=29, gen=177, frames= 52500, events=11894, 8 t/s
+  Tick  211000: pop=161, species=30, gen=179, frames= 52750, events=11929, 8 t/s
+  Tick  212000: pop=166, species=36, gen=180, frames= 53000, events=11974, 8 t/s
+  Tick  213000: pop=172, species=30, gen=177, frames= 53250, events=12008, 8 t/s
+  Tick  214000: pop=163, species=30, gen=177, frames= 53500, events=12054, 8 t/s
+  Tick  215000: pop=162, species=25, gen=177, frames= 53750, events=12096, 8 t/s
+  Tick  216000: pop=131, species=19, gen=177, frames= 54000, events=12132, 8 t/s
+  Tick  217000: pop=122, species=21, gen=179, frames= 54250, events=12152, 8 t/s
+  Tick  218000: pop=123, species=20, gen=178, frames= 54500, events=12175, 8 t/s
+  Tick  219000: pop=142, species=23, gen=179, frames= 54750, events=12200, 8 t/s
+  Tick  220000: pop=149, species=27, gen=180, frames= 55000, events=12236, 8 t/s
+  Tick  221000: pop=164, species=30, gen=181, frames= 55250, events=12266, 8 t/s
+  Tick  222000: pop=186, species=28, gen=181, frames= 55500, events=12299, 8 t/s
+  Tick  223000: pop=133, species=28, gen=181, frames= 55750, events=12337, 8 t/s
+  Tick  224000: pop=117, species=26, gen=181, frames= 56000, events=12362, 8 t/s
+  Tick  225000: pop= 99, species=20, gen=182, frames= 56250, events=12383, 8 t/s
+  Tick  226000: pop=111, species=27, gen=183, frames= 56500, events=12406, 8 t/s
+  Tick  227000: pop=123, species=17, gen=183, frames= 56750, events=12422, 8 t/s
+  Tick  228000: pop=130, species=18, gen=184, frames= 57000, events=12447, 8 t/s
+  Tick  229000: pop=110, species=18, gen=183, frames= 57250, events=12467, 8 t/s
+  Tick  230000: pop=118, species=20, gen=183, frames= 57500, events=12486, 8 t/s
+  Tick  231000: pop=128, species=21, gen=184, frames= 57750, events=12511, 8 t/s
+  Tick  232000: pop=183, species=33, gen=186, frames= 58000, events=12549, 8 t/s
+  Tick  233000: pop=151, species=28, gen=186, frames= 58250, events=12583, 8 t/s
+  Tick  234000: pop=121, species=32, gen=187, frames= 58500, events=12609, 8 t/s
+  Tick  235000: pop=130, species=36, gen=188, frames= 58750, events=12644, 8 t/s
+  Tick  236000: pop=125, species=32, gen=188, frames= 59000, events=12673, 8 t/s
+  Tick  237000: pop=111, species=25, gen=189, frames= 59250, events=12703, 8 t/s
+  Tick  238000: pop= 93, species=25, gen=190, frames= 59500, events=12730, 8 t/s
+  Tick  239000: pop= 97, species=23, gen=191, frames= 59750, events=12740, 8 t/s
+  Tick  240000: pop=107, species=28, gen=194, frames= 60000, events=12764, 8 t/s
+  Tick  241000: pop=109, species=31, gen=193, frames= 60250, events=12786, 8 t/s
+  Tick  242000: pop=135, species=34, gen=193, frames= 60500, events=12821, 8 t/s
+  Tick  243000: pop=154, species=34, gen=194, frames= 60750, events=12861, 8 t/s
+  Tick  244000: pop=161, species=34, gen=194, frames= 61000, events=12906, 8 t/s
+  Tick  245000: pop=131, species=27, gen=194, frames= 61250, events=12939, 8 t/s
+  Tick  246000: pop=121, species=27, gen=194, frames= 61500, events=12975, 8 t/s
+  Tick  247000: pop= 93, species=19, gen=193, frames= 61750, events=12997, 8 t/s
+  Tick  248000: pop= 95, species=21, gen=193, frames= 62000, events=13017, 8 t/s
+  Tick  249000: pop=107, species=16, gen=194, frames= 62250, events=13034, 8 t/s
+  Tick  250000: pop=121, species=28, gen=196, frames= 62500, events=13066, 8 t/s
+  Tick  251000: pop=102, species=24, gen=196, frames= 62750, events=13090, 8 t/s
+  Tick  252000: pop= 89, species=18, gen=196, frames= 63000, events=13115, 8 t/s
+  Tick  253000: pop=132, species=32, gen=198, frames= 63250, events=13150, 8 t/s
+  Tick  254000: pop=159, species=25, gen=193, frames= 63500, events=13195, 8 t/s
+  Tick  255000: pop=153, species=22, gen=193, frames= 63750, events=13224, 8 t/s
+  Tick  256000: pop=124, species=19, gen=194, frames= 64000, events=13248, 8 t/s
+  Tick  257000: pop=110, species=22, gen=193, frames= 64250, events=13282, 8 t/s
+  Tick  258000: pop= 99, species=18, gen=195, frames= 64500, events=13299, 8 t/s
+  Tick  259000: pop= 89, species=21, gen=196, frames= 64750, events=13315, 8 t/s
+  Tick  260000: pop=104, species=18, gen=196, frames= 65000, events=13335, 8 t/s
+  Tick  261000: pop=131, species=19, gen=194, frames= 65250, events=13361, 8 t/s
+  Tick  262000: pop=120, species=23, gen=194, frames= 65500, events=13387, 8 t/s
+  Tick  263000: pop=122, species=20, gen=193, frames= 65750, events=13410, 8 t/s
+  Tick  264000: pop=151, species=29, gen=193, frames= 66000, events=13455, 8 t/s
+  Tick  265000: pop=163, species=27, gen=194, frames= 66250, events=13493, 8 t/s
+  Tick  266000: pop=131, species=17, gen=195, frames= 66500, events=13518, 8 t/s
+  Tick  267000: pop=104, species=17, gen=194, frames= 66750, events=13538, 8 t/s
+  Tick  268000: pop= 90, species=10, gen=194, frames= 67000, events=13550, 8 t/s
+  Tick  269000: pop= 96, species=12, gen=194, frames= 67250, events=13563, 8 t/s
+  Tick  270000: pop=123, species=17, gen=195, frames= 67500, events=13582, 8 t/s
+  Tick  271000: pop=134, species=25, gen=195, frames= 67750, events=13615, 8 t/s
+  Tick  272000: pop=181, species=28, gen=195, frames= 68000, events=13647, 8 t/s
+  Tick  273000: pop=153, species=26, gen=195, frames= 68250, events=13676, 8 t/s
+  Tick  274000: pop=148, species=24, gen=196, frames= 68500, events=13707, 8 t/s
+  Tick  275000: pop=119, species=26, gen=196, frames= 68750, events=13739, 8 t/s
+  Tick  276000: pop=106, species=24, gen=196, frames= 69000, events=13755, 8 t/s
+  Tick  277000: pop= 90, species=24, gen=197, frames= 69250, events=13781, 8 t/s
+  Tick  278000: pop= 89, species=24, gen=196, frames= 69500, events=13797, 8 t/s
+  Tick  279000: pop= 67, species=21, gen=197, frames= 69750, events=13814, 8 t/s
+  Tick  280000: pop= 82, species=24, gen=196, frames= 70000, events=13836, 8 t/s
+  Tick  281000: pop=122, species=24, gen=196, frames= 70250, events=13855, 8 t/s
+  Tick  282000: pop=100, species=30, gen=197, frames= 70500, events=13882, 8 t/s
+  Tick  283000: pop= 79, species=21, gen=197, frames= 70750, events=13893, 8 t/s
+  Tick  284000: pop=129, species=28, gen=196, frames= 71000, events=13920, 8 t/s
+  Tick  285000: pop=144, species=28, gen=197, frames= 71250, events=13957, 8 t/s
+  Tick  286000: pop=127, species=27, gen=196, frames= 71500, events=13987, 8 t/s
+  Tick  287000: pop=107, species=30, gen=199, frames= 71750, events=14019, 8 t/s
+  Tick  288000: pop= 83, species=31, gen=200, frames= 72000, events=14037, 8 t/s
+  Tick  289000: pop= 89, species=24, gen=201, frames= 72250, events=14057, 8 t/s
+  Tick  290000: pop=108, species=29, gen=203, frames= 72500, events=14082, 8 t/s
+  Tick  291000: pop=134, species=40, gen=205, frames= 72750, events=14123, 8 t/s
+  Tick  292000: pop=147, species=37, gen=208, frames= 73000, events=14161, 8 t/s
+  Tick  293000: pop=132, species=38, gen=207, frames= 73250, events=14202, 8 t/s
+  Tick  294000: pop=122, species=35, gen=208, frames= 73500, events=14247, 8 t/s
+  Tick  295000: pop= 83, species=28, gen=208, frames= 73750, events=14271, 8 t/s
+  Tick  296000: pop= 72, species=28, gen=202, frames= 74000, events=14290, 8 t/s
+  Tick  297000: pop= 74, species=27, gen=202, frames= 74250, events=14310, 8 t/s
+  Tick  298000: pop= 77, species=28, gen=202, frames= 74500, events=14328, 8 t/s
+  Tick  299000: pop= 85, species=31, gen=203, frames= 74750, events=14350, 8 t/s
+  Tick  300000: pop= 97, species=38, gen=203, frames= 75000, events=14384, 8 t/s
+
+Simulation complete: 35854s (597.6 min)
+  75000 frames captured
+  14384 events detected
+
+Exporting timeline data...
+  Timeline: C:\Users\shane\primordial\..\shaneconner-site\data\primordial-timeline-p3.json (452 KB)
+  Events: C:\Users\shane\primordial\..\shaneconner-site\data\primordial-events-p3.json (14384 events)
+
+Selecting narrative clips...
+  9 clips selected:
+    [genesis] Genesis (ticks 1-501)
+    [first-split] First Divergence (ticks 502-1502)
+    [boom] The Bloom (ticks 1503-2503)
+    [diversity] Radiation (ticks 2972-3972)
+    [generation-milestone] Generational Shift (ticks 159712-160712)
+    [equilibrium] Balance (ticks 262172-263172)
+    [late-diversity] Late Radiation (ticks 292512-293512)
+    [deep-time] Deep Time (ticks 293513-294513)
+    [body-evolution] Body Diversity (ticks 298877-299877)
+
+Extracting clip frames from archive...
+  WARNING: No frames for genesis
+  first-split: 250 frames (11210 KB)
+  WARNING: No frames for boom
+  diversity: 251 frames (22156 KB)
+  generation-milestone: 251 frames (23440 KB)
+  equilibrium: 251 frames (20464 KB)
+  late-diversity: 251 frames (27799 KB)
+  WARNING: No frames for deep-time
+  WARNING: No frames for body-evolution
+
+==================================================
+  Part 3 export complete
+  Total time: 35965s (599.4 min)
+  Frames: 75000 (6874 MB)
+  Timeline: 27799 KB
+  Clips: 9
+  Events: 14384
+==================================================
+
+Full frames: C:\Users\shane\primordial\..\shaneconner-site\data\full-frames-p3/
+Timeline:    C:\Users\shane\primordial\..\shaneconner-site\data\primordial-timeline-p3.json
+Clips:       C:\Users\shane\primordial\..\shaneconner-site\data\narrative-p3/
+Events:      C:\Users\shane\primordial\..\shaneconner-site\data\primordial-events-p3.json

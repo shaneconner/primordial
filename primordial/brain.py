@@ -1,4 +1,8 @@
-"""Feedforward neural network for organism brains."""
+"""Neural network for organism brains.
+
+Part 1-3: Feedforward with memory registers.
+Part 4: Adds recurrent hidden state, memory decay, and neuromodulation.
+"""
 
 from __future__ import annotations
 
@@ -32,13 +36,14 @@ _ACTIVATIONS = {
 
 
 class Brain:
-    """Simple feedforward neural network.
+    """Neural network with optional recurrence and neuromodulation.
 
-    Architecture: inputs -> hidden (with activation) -> outputs (sigmoid)
+    Architecture: inputs (+memory +prev_hidden) -> hidden (with activation) -> outputs (sigmoid)
 
-    Input/output sizes are determined by the organism's body morphology
-    (number of sensors, muscles, etc.) but use fixed-size buffers so the
-    network can handle body mutations without complete reconstruction.
+    Part 4 additions:
+    - Recurrent: previous hidden state concatenated with inputs
+    - Memory decay: memory registers decay each tick (configurable rate)
+    - Neuromodulation: dedicated outputs that scale all other outputs globally
     """
 
     def __init__(
@@ -62,9 +67,16 @@ class Brain:
         self.activation_fn = _ACTIVATIONS[activation]
         self.n_memory = n_memory
 
+        # Part 4: Recurrence and modulation
+        self.recurrent = getattr(config, 'enable_recurrent', False)
+        self.memory_decay = getattr(config, 'memory_decay', 1.0)
+        self.n_modulators = getattr(config, 'n_modulators', 0)
+
         # Total I/O including memory registers
-        self.total_inputs = n_inputs + n_memory  # regular inputs + memory read
-        self.total_outputs = n_outputs + n_memory  # regular outputs + memory write
+        # If recurrent: inputs also include prev_hidden
+        self.recurrent_size = hidden_size if self.recurrent else 0
+        self.total_inputs = n_inputs + n_memory + self.recurrent_size
+        self.total_outputs = n_outputs + n_memory
 
         # Weight matrices (Xavier initialization if not provided)
         if weights_ih is not None:
@@ -92,26 +104,38 @@ class Brain:
         # Memory registers (persist across ticks)
         self.memory = np.zeros(n_memory)
 
+        # Part 4: Previous hidden state for recurrence
+        self.prev_hidden = np.zeros(hidden_size) if self.recurrent else None
+
     def forward(self, inputs: np.ndarray) -> np.ndarray:
         """Run forward pass.
 
         Args:
-            inputs: Array of sensor/proprioception inputs. Length should match
-                    n_inputs. If shorter, remaining inputs are 0. If longer, truncated.
+            inputs: Array of sensor/proprioception inputs.
 
         Returns:
-            Array of outputs (muscle targets + eat + reproduce signals).
-            Does NOT include memory write values - those are handled internally.
+            Array of outputs (muscle targets + action signals).
         """
-        # Build full input vector with memory
+        # Apply memory decay before reading
+        if self.memory_decay < 1.0 and self.n_memory > 0:
+            self.memory *= self.memory_decay
+
+        # Build full input vector: [inputs | memory | prev_hidden (if recurrent)]
         full_input = np.zeros(self.total_inputs)
         n = min(len(inputs), self.n_inputs)
         full_input[:n] = inputs[:n]
         full_input[self.n_inputs : self.n_inputs + self.n_memory] = self.memory
+        if self.recurrent and self.prev_hidden is not None:
+            offset = self.n_inputs + self.n_memory
+            full_input[offset : offset + self.recurrent_size] = self.prev_hidden
 
         # Hidden layer
         hidden = full_input @ self.weights_ih + self.bias_h
         hidden = self.activation_fn(hidden)
+
+        # Save hidden state for next tick (recurrence)
+        if self.recurrent:
+            self.prev_hidden = hidden.copy()
 
         # Output layer (sigmoid for bounded outputs)
         output = hidden @ self.weights_ho + self.bias_o
@@ -121,8 +145,22 @@ class Brain:
         if self.n_memory > 0:
             self.memory = output[self.n_outputs : self.n_outputs + self.n_memory]
 
-        # Return only the action outputs (not memory writes)
-        return output[: self.n_outputs]
+        # Extract action outputs
+        action_outputs = output[: self.n_outputs].copy()
+
+        # Part 4: Neuromodulation — last n_modulators of action outputs
+        # scale all non-modulator outputs by modulator values mapped to [0.5, 2.0]
+        if self.n_modulators > 0 and self.n_outputs > self.n_modulators:
+            mod_start = self.n_outputs - self.n_modulators
+            modulators = action_outputs[mod_start:]
+            # Map [0, 1] sigmoid output to [0.5, 2.0] gain range
+            gains = 0.5 + modulators * 1.5
+            # Average gain across modulators
+            avg_gain = float(np.mean(gains))
+            # Scale all non-modulator outputs
+            action_outputs[:mod_start] *= avg_gain
+
+        return action_outputs
 
     def resize_hidden(self, new_size: int, rng: np.random.Generator) -> None:
         """Grow or shrink the hidden layer, preserving existing weights."""
@@ -151,6 +189,14 @@ class Brain:
         self.bias_h = new_bh
 
         self.hidden_size = new_size
+
+        # Part 4: Resize recurrent state and update total_inputs
+        if self.recurrent:
+            new_prev = np.zeros(new_size)
+            new_prev[:copy_h] = self.prev_hidden[:copy_h] if self.prev_hidden is not None else 0
+            self.prev_hidden = new_prev
+            self.recurrent_size = new_size
+            self.total_inputs = self.n_inputs + self.n_memory + self.recurrent_size
 
     def get_weight_count(self) -> int:
         """Total number of trainable parameters."""
@@ -186,22 +232,22 @@ def create_brain_for_body(
     config: BrainConfig,
     rng: np.random.Generator,
 ) -> Brain:
-    """Create a brain sized for a specific body morphology.
-
-    Inputs per sensor: configurable (3 for Part 1, 6 for Part 2)
-    Additional inputs: energy, age, proprioception (1 per muscle)
-    Outputs: 1 per muscle (contraction) + action outputs (eat+repro or eat+attack+repro)
-    """
+    """Create a brain sized for a specific body morphology."""
     ips = config.inputs_per_sensor
-    n_inputs = (n_sensors * ips) + 2 + n_muscles
+    n_globals = getattr(config, 'n_global_inputs', 2)
+    n_inputs = (n_sensors * ips) + n_globals + n_muscles
     n_outputs = n_muscles + config.n_action_outputs
 
     # Clamp to buffer limits
     n_inputs = min(n_inputs, config.max_inputs)
     n_outputs = min(n_outputs, config.max_outputs)
 
+    # Recurrent size increases total input dimension
+    recurrent = getattr(config, 'enable_recurrent', False)
+    recurrent_size = hidden_size if recurrent else 0
+
     # Xavier init
-    total_in = n_inputs + n_memory
+    total_in = n_inputs + n_memory + recurrent_size
     total_out = n_outputs + n_memory
 
     scale_ih = np.sqrt(2.0 / (total_in + hidden_size))
