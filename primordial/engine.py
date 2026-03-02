@@ -123,6 +123,11 @@ class Engine:
         # 4. Wrap positions (toroidal world)
         self.world.wrap_positions()
 
+        # Kill organisms with NaN positions (from weight overflow)
+        for org in self.world.organisms:
+            if org.alive and not np.isfinite(org.position[0]):
+                org.alive = False
+
         # 4.5 Part 4: Organism repulsion (after physics, before eating)
         self.world.handle_organism_repulsion()
 

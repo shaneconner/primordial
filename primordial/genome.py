@@ -20,9 +20,9 @@ _MUTABLE_NODE_TYPES_BASE = [
     NodeType.MOUTH, NodeType.FAT, NodeType.ARMOR,
 ]
 
-# Part 4 adds SIGNAL and STOMACH
+# Part 4 adds SIGNAL, STOMACH, and CLAW
 _MUTABLE_NODE_TYPES_P4 = _MUTABLE_NODE_TYPES_BASE + [
-    NodeType.SIGNAL, NodeType.STOMACH,
+    NodeType.SIGNAL, NodeType.STOMACH, NodeType.CLAW,
 ]
 
 
@@ -181,7 +181,10 @@ def mutate(
 
     if rng.random() < g.meta["body_mutation_rate"]:
         _mutate_body(g, evolution_config, rng, body_config)
-        _resize_brain_for_body(g, brain_config, rng)
+
+    # Always resize brain to match current body + hidden size
+    # (brain topology mutations can change recurrent_size independently of body)
+    _resize_brain_for_body(g, brain_config, rng)
 
     # Part 4: Node scale perturbation
     if body_config and getattr(body_config, 'enable_node_scaling', False):
@@ -339,6 +342,7 @@ def _body_add_node(g: Genome, rng: np.random.Generator, body_config: "BodyConfig
     if parent["type"] == int(NodeType.BONE) and limb_bias > 0 and rng.random() < 0.5:
         new_type = int(rng.choice([
             NodeType.BONE, NodeType.BONE, NodeType.MUSCLE_ANCHOR, NodeType.MOUTH,
+            NodeType.CLAW,  # claws at bone tips = velocity weapons
         ]))
     else:
         new_type = int(rng.choice(mutable_types))

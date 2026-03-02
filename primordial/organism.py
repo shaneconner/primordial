@@ -79,6 +79,7 @@ class Organism:
         self.share_signal = 0.0
         self.group_size = 0
         self._damage_recent = 0.0
+        self._cached_radius = None
 
     def _build_body(
         self, genome: Genome, config: SimConfig, rng: np.random.Generator
@@ -123,7 +124,9 @@ class Organism:
 
     @property
     def bounding_radius(self) -> float:
-        return self.body.get_bounding_radius()
+        if self._cached_radius is None:
+            self._cached_radius = self.body.get_bounding_radius()
+        return self._cached_radius
 
     def sense(
         self,
@@ -317,6 +320,7 @@ class Organism:
 
     def step_physics(self, rng: np.random.Generator) -> None:
         """Advance body physics one tick with Brownian motion."""
+        self._cached_radius = None  # invalidate after movement
         # Apply random force to core node (thermal wandering)
         bf = self.config.body.brownian_force
         if bf > 0:

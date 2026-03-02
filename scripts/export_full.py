@@ -18,6 +18,7 @@ Usage:
 import sys
 import os
 import json
+import gc
 import time
 import argparse
 from collections import Counter
@@ -27,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from primordial.config import SimConfig
 from primordial.engine import Engine
 
-NODE_TYPE_NAMES = ["core", "bone", "muscle", "sensor", "mouth", "fat", "armor", "signal", "stomach"]
+NODE_TYPE_NAMES = ["core", "bone", "muscle", "sensor", "mouth", "fat", "armor", "signal", "stomach", "claw"]
 
 SITE_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -323,7 +324,9 @@ def run_full_export(
         if t % frame_interval == 0:
             snap = compress_snapshot(engine.world)
             line = json.dumps(snap, separators=(",", ":"))
-            frames_file.write(line + "\n")
+            frames_file.write(line)
+            frames_file.write("\n")
+            del snap, line
             total_frames += 1
 
             if total_frames % chunk_size == 0:
@@ -440,6 +443,9 @@ def run_full_export(
             max_gen = max((o.generation for o in engine.world.organisms if o.alive), default=0)
             print(f"  Tick {t:>7}: pop={pop:>3}, species={sp_count:>2}, gen={max_gen:>3}, "
                   f"frames={total_frames:>6}, events={len(events):>4}, {tps:.0f} t/s")
+            # Periodic GC to combat heap fragmentation in long runs
+            if t % 10000 == 0:
+                gc.collect()
 
     # Close last chunk
     if frames_file:

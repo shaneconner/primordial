@@ -404,28 +404,47 @@ class World:
             self.resources = [r for r in self.resources if id(r) not in eaten]
 
     def handle_combat(self) -> None:
-        """Process combat between organisms."""
+        """Process combat between organisms (mouths + claws)."""
         kin_enabled = self.config.body.enable_kin_recognition
         armor_reflect = self.config.body.armor_damage_reflection
         energy_transfer = self.config.evolution.predation_energy_transfer
         immunity_ticks = self.config.body.offspring_immunity_ticks
         edge_combat = self.config.body.enable_edge_combat
         node_hp_enabled = self.config.body.enable_node_hp
+        attack_radius = self.config.body.attack_radius
+        ar2 = attack_radius * attack_radius
+        mouth_dmg = self.config.evolution.attack_damage_per_mouth
+        claw_base = self.config.body.claw_base_damage
+        claw_vel_factor = self.config.body.claw_velocity_factor
 
         for org in self.organisms:
             if not org.alive or not org.wants_to_attack():
                 continue
-            if org.body.n_mouths == 0:
+            has_mouths = org.body.n_mouths > 0
+            has_claws = org.body.n_claws > 0
+            if not has_mouths and not has_claws:
                 continue
 
-            for mouth_idx in org.body.mouth_indices:
-                if org.body.node_alive is not None and not org.body.node_alive[mouth_idx]:
-                    continue
+            # Build list of (node_idx, damage) for all attack nodes
+            attacks = []
+            if has_mouths:
+                for idx in org.body.mouth_indices:
+                    if org.body.node_alive is not None and not org.body.node_alive[idx]:
+                        continue
+                    attacks.append((idx, mouth_dmg))
+            if has_claws:
+                for idx in org.body.claw_indices:
+                    if org.body.node_alive is not None and not org.body.node_alive[idx]:
+                        continue
+                    # Velocity-based damage
+                    vel = org.body.velocities[idx]
+                    speed = math.sqrt(vel[0] * vel[0] + vel[1] * vel[1])
+                    damage = claw_base + speed * claw_vel_factor
+                    attacks.append((idx, damage))
 
-                mx, my = org.body.positions[mouth_idx]
-                attack_radius = self.config.body.attack_radius
-
-                nearby = self.organism_hash.query(mx, my, attack_radius)
+            for atk_idx, damage in attacks:
+                ax, ay = org.body.positions[atk_idx]
+                nearby = self.organism_hash.query(ax, ay, attack_radius)
                 for target in nearby:
                     if target is org or not target.alive:
                         continue
@@ -442,12 +461,11 @@ class World:
                     # Check contact: nodes first, then edges if enabled
                     hit = False
                     hit_node = -1
-                    ar2 = attack_radius * attack_radius
 
                     for ni in range(target.body.n_nodes):
                         tx, ty = target.body.positions[ni]
-                        dx = tx - mx
-                        dy = ty - my
+                        dx = tx - ax
+                        dy = ty - ay
                         if dx * dx + dy * dy <= ar2:
                             hit = True
                             hit_node = ni
@@ -455,22 +473,18 @@ class World:
 
                     # Part 4: Edge-aware combat
                     if not hit and edge_combat and target.body.n_edges > 0:
-                        edge_dist, nearest = target.body.point_to_edge_distance(mx, my)
+                        edge_dist, nearest = target.body.point_to_edge_distance(ax, ay)
                         if edge_dist <= attack_radius:
                             hit = True
                             hit_node = nearest
 
                     if hit:
-                        damage = self.config.evolution.attack_damage_per_mouth
-
-                        # Part 4: Node HP damage model
                         if node_hp_enabled and hit_node >= 0:
                             target.body.damage_node(hit_node, damage * 0.3)
 
                         actual = target.take_damage(damage)
                         org.eat(actual * energy_transfer)
 
-                        # Track damage for organism awareness
                         if hasattr(target, '_damage_recent'):
                             target._damage_recent += actual
 

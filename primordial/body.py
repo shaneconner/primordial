@@ -22,6 +22,7 @@ class NodeType(IntEnum):
     ARMOR = 6
     SIGNAL = 7      # Part 4: broadcasts chemical signals (pheromones)
     STOMACH = 8     # Part 4: improves food digestion efficiency
+    CLAW = 9        # Part 4: dedicated attack, damage scales with node velocity
 
 
 class EdgeType(IntEnum):
@@ -41,6 +42,7 @@ _NODE_PROPS = {
     NodeType.ARMOR: ("mass_armor", "cost_armor"),
     NodeType.SIGNAL: ("mass_signal", "cost_signal"),
     NodeType.STOMACH: ("mass_stomach", "cost_stomach"),
+    NodeType.CLAW: ("mass_claw", "cost_claw"),
 }
 
 _EDGE_STIFFNESS = {
@@ -118,11 +120,16 @@ class Body:
         self.armor_indices = np.where(self.node_types == NodeType.ARMOR)[0]
         self.signal_indices = np.where(self.node_types == NodeType.SIGNAL)[0]
         self.stomach_indices = np.where(self.node_types == NodeType.STOMACH)[0]
+        self.claw_indices = np.where(self.node_types == NodeType.CLAW)[0]
 
         self.n_sensors = len(self.sensor_indices)
         self.n_mouths = len(self.mouth_indices)
         self.n_signals = len(self.signal_indices)
         self.n_stomachs = len(self.stomach_indices)
+        self.n_claws = len(self.claw_indices)
+
+        # Precompute tendon edge mask for nonlinear stiffness
+        self.tendon_mask = self.edge_types == EdgeType.TENDON
 
         # Part 4: Node scaling (per-node size multiplier, default 1.0)
         if hasattr(config, 'enable_node_scaling') and config.enable_node_scaling:
@@ -143,9 +150,15 @@ class Body:
 
         # Cached values (recomputed once per tick or on mutation)
         self._total_mass = float(np.sum(self.masses))
-        self._energy_cost = sum(
+        base_cost = sum(
             getattr(config, _NODE_PROPS[NodeType(t)][1]) for t in node_types
         )
+        # Bone metabolic discount: skeletal structure reduces running cost
+        bone_discount = getattr(config, 'bone_metabolic_discount', 0.0)
+        if bone_discount > 0 and self.n_edges > 0:
+            bone_edge_ratio = float(np.sum(self.edge_types == EdgeType.BONE)) / self.n_edges
+            base_cost *= (1.0 - bone_edge_ratio * bone_discount)
+        self._energy_cost = base_cost
         self._com_cache: np.ndarray | None = None
 
     @property
@@ -337,7 +350,19 @@ class Body:
             # Target lengths: rest_length * muscle_target (muscles) or rest_length (others)
             target = self.rest_lengths * self.muscle_targets
             displacement = dist - target
-            force_magnitude = self.stiffness * displacement
+
+            # Nonlinear tendon stiffness: gets much stiffer past 20% stretch
+            effective_stiffness = self.stiffness.copy()
+            if np.any(self.tendon_mask):
+                stretch_ratio = dist / np.maximum(self.rest_lengths, 1e-6)
+                threshold = getattr(self.config, 'tendon_nonlinear_threshold', 1.2)
+                factor = getattr(self.config, 'tendon_nonlinear_factor', 5.0)
+                over = np.maximum(stretch_ratio - threshold, 0.0)
+                effective_stiffness[self.tendon_mask] += (
+                    self.stiffness[self.tendon_mask] * over[self.tendon_mask] * factor
+                )
+
+            force_magnitude = effective_stiffness * displacement
 
             # Damping: project velocity difference onto spring direction
             dv = self.velocities[self.edge_to] - self.velocities[self.edge_from]
@@ -421,7 +446,8 @@ class Body:
         """Get approximate bounding radius from center of mass."""
         com = self.center_of_mass
         dists = np.sqrt(np.sum((self.positions - com) ** 2, axis=1))
-        return float(np.max(dists)) if len(dists) > 0 else 1.0
+        result = float(np.max(dists)) if len(dists) > 0 else 1.0
+        return result if np.isfinite(result) else 1.0
 
     def to_dict(self) -> dict:
         """Serialize body state for recording."""

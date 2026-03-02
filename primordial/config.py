@@ -67,6 +67,8 @@ class BodyConfig:
     # Node masses (Part 4 additions)
     mass_signal: float = 0.8
     mass_stomach: float = 1.2
+    mass_claw: float = 0.5       # Part 4: light so claws move fast at chain tips
+    cost_claw: float = 0.015     # Part 4: expensive — predation is a luxury
 
     # Eating
     eat_radius: float = 8.0  # contact distance for mouth to eat
@@ -193,6 +195,17 @@ class BodyConfig:
 
     # Part 4: Edge-aware combat
     enable_edge_combat: bool = False  # check edge proximity, not just nodes
+
+    # Part 4: Claw velocity-based damage
+    claw_base_damage: float = 5.0      # flat damage per claw hit
+    claw_velocity_factor: float = 0.5  # additional damage per unit of claw velocity
+
+    # Part 4: Nonlinear tendon stiffness (elastic snap-back)
+    tendon_nonlinear_threshold: float = 1.2  # stretch ratio where stiffening kicks in
+    tendon_nonlinear_factor: float = 5.0     # how aggressively stiffness ramps up
+
+    # Part 4: Bone metabolic discount (skeleton = efficient body)
+    bone_metabolic_discount: float = 0.0  # max fraction of cost reduction (scaled by bone edge ratio)
 
     # Part 4: Individual signatures
     enable_signatures: bool = False
@@ -583,6 +596,13 @@ class SimConfig:
                 repulsion_min_overlap=2.0,
                 enable_edge_combat=True,
 
+                # ── Part 4: Claw + tendon + bone synergy ──
+                claw_base_damage=5.0,
+                claw_velocity_factor=0.5,
+                tendon_nonlinear_threshold=1.2,
+                tendon_nonlinear_factor=5.0,
+                bone_metabolic_discount=0.15,  # up to 15% cost reduction from skeleton
+
                 # ── Part 4: Identity ──
                 enable_signatures=True,
                 signature_size=3,
@@ -605,7 +625,7 @@ class SimConfig:
                 senescence_age=0.75,
                 enable_sexual_reproduction=True,
                 sexual_proximity=60.0,
-                attack_damage_per_mouth=15.0,
+                attack_damage_per_mouth=3.0,  # nerfed: mouths eat, claws kill
                 predation_energy_transfer=0.7,
                 eat_efficiency=0.6,
                 body_mutation_rate=0.20,

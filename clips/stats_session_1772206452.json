@@ -1,0 +1,2702 @@
+[
+  {
+    "population": 50,
+    "avg_energy": 78.2,
+    "avg_age": 5.0,
+    "species_count": 1,
+    "resource_count": 495,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.4,
+    "avg_age": 10.0,
+    "species_count": 1,
+    "resource_count": 502,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.0,
+    "avg_age": 15.0,
+    "species_count": 1,
+    "resource_count": 509,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.8,
+    "avg_age": 20.0,
+    "species_count": 1,
+    "resource_count": 516,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.0,
+    "avg_age": 25.0,
+    "species_count": 1,
+    "resource_count": 521,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.7,
+    "avg_age": 30.0,
+    "species_count": 1,
+    "resource_count": 528,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.6,
+    "avg_age": 35.0,
+    "species_count": 1,
+    "resource_count": 531,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.3,
+    "avg_age": 40.0,
+    "species_count": 1,
+    "resource_count": 537,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.2,
+    "avg_age": 45.0,
+    "species_count": 1,
+    "resource_count": 543,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.9,
+    "avg_age": 50.0,
+    "species_count": 1,
+    "resource_count": 549,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.4,
+    "avg_age": 55.0,
+    "species_count": 1,
+    "resource_count": 553,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.5,
+    "avg_age": 60.0,
+    "species_count": 1,
+    "resource_count": 558,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 77.3,
+    "avg_age": 65.0,
+    "species_count": 1,
+    "resource_count": 563,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.9,
+    "avg_age": 70.0,
+    "species_count": 1,
+    "resource_count": 572,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.7,
+    "avg_age": 75.0,
+    "species_count": 1,
+    "resource_count": 578,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.4,
+    "avg_age": 80.0,
+    "species_count": 1,
+    "resource_count": 581,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.2,
+    "avg_age": 85.0,
+    "species_count": 1,
+    "resource_count": 584,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.1,
+    "avg_age": 90.0,
+    "species_count": 1,
+    "resource_count": 590,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 50,
+    "avg_energy": 76.0,
+    "avg_age": 95.0,
+    "species_count": 1,
+    "resource_count": 598,
+    "avg_nodes": 5.0,
+    "max_generation": 0
+  },
+  {
+    "population": 74,
+    "avg_energy": 48.8,
+    "avg_age": 67.6,
+    "species_count": 2,
+    "resource_count": 602,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 75,
+    "avg_energy": 46.6,
+    "avg_age": 71.7,
+    "species_count": 3,
+    "resource_count": 605,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 73,
+    "avg_energy": 46.7,
+    "avg_age": 78.4,
+    "species_count": 3,
+    "resource_count": 613,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 48.6,
+    "avg_age": 84.9,
+    "species_count": 3,
+    "resource_count": 620,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 48.9,
+    "avg_age": 89.9,
+    "species_count": 3,
+    "resource_count": 624,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 49.0,
+    "avg_age": 94.9,
+    "species_count": 3,
+    "resource_count": 630,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 49.4,
+    "avg_age": 99.9,
+    "species_count": 3,
+    "resource_count": 636,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 48.8,
+    "avg_age": 103.5,
+    "species_count": 3,
+    "resource_count": 641,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 48.8,
+    "avg_age": 108.5,
+    "species_count": 3,
+    "resource_count": 645,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 49.2,
+    "avg_age": 113.5,
+    "species_count": 3,
+    "resource_count": 649,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 72,
+    "avg_energy": 48.2,
+    "avg_age": 116.8,
+    "species_count": 3,
+    "resource_count": 653,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 72,
+    "avg_energy": 48.5,
+    "avg_age": 121.8,
+    "species_count": 3,
+    "resource_count": 656,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 49.5,
+    "avg_age": 128.5,
+    "species_count": 3,
+    "resource_count": 661,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 49.2,
+    "avg_age": 133.5,
+    "species_count": 3,
+    "resource_count": 670,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 50.0,
+    "avg_age": 138.5,
+    "species_count": 3,
+    "resource_count": 671,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 49.9,
+    "avg_age": 143.5,
+    "species_count": 3,
+    "resource_count": 676,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 71,
+    "avg_energy": 50.2,
+    "avg_age": 148.5,
+    "species_count": 3,
+    "resource_count": 679,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 51.6,
+    "avg_age": 153.0,
+    "species_count": 3,
+    "resource_count": 682,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 51.9,
+    "avg_age": 158.0,
+    "species_count": 3,
+    "resource_count": 685,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 70,
+    "avg_energy": 52.1,
+    "avg_age": 163.0,
+    "species_count": 3,
+    "resource_count": 690,
+    "avg_nodes": 5.0,
+    "max_generation": 1
+  },
+  {
+    "population": 79,
+    "avg_energy": 45.4,
+    "avg_age": 148.9,
+    "species_count": 3,
+    "resource_count": 695,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 80,
+    "avg_energy": 43.0,
+    "avg_age": 152.0,
+    "species_count": 4,
+    "resource_count": 701,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 80,
+    "avg_energy": 42.9,
+    "avg_age": 156.9,
+    "species_count": 4,
+    "resource_count": 704,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 81,
+    "avg_energy": 42.3,
+    "avg_age": 157.3,
+    "species_count": 4,
+    "resource_count": 710,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 82,
+    "avg_energy": 42.1,
+    "avg_age": 160.3,
+    "species_count": 4,
+    "resource_count": 712,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 82,
+    "avg_energy": 41.5,
+    "avg_age": 165.3,
+    "species_count": 4,
+    "resource_count": 717,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 81,
+    "avg_energy": 42.1,
+    "avg_age": 169.6,
+    "species_count": 4,
+    "resource_count": 723,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 81,
+    "avg_energy": 42.4,
+    "avg_age": 174.6,
+    "species_count": 4,
+    "resource_count": 727,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 84,
+    "avg_energy": 40.6,
+    "avg_age": 173.2,
+    "species_count": 4,
+    "resource_count": 734,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 84,
+    "avg_energy": 41.0,
+    "avg_age": 178.2,
+    "species_count": 4,
+    "resource_count": 737,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 84,
+    "avg_energy": 40.8,
+    "avg_age": 183.2,
+    "species_count": 4,
+    "resource_count": 742,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 84,
+    "avg_energy": 41.0,
+    "avg_age": 188.2,
+    "species_count": 4,
+    "resource_count": 743,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 83,
+    "avg_energy": 41.3,
+    "avg_age": 192.4,
+    "species_count": 4,
+    "resource_count": 749,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 85,
+    "avg_energy": 41.1,
+    "avg_age": 192.8,
+    "species_count": 4,
+    "resource_count": 746,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 85,
+    "avg_energy": 41.7,
+    "avg_age": 197.8,
+    "species_count": 4,
+    "resource_count": 747,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 84,
+    "avg_energy": 42.2,
+    "avg_age": 204.5,
+    "species_count": 4,
+    "resource_count": 752,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 84,
+    "avg_energy": 42.8,
+    "avg_age": 209.5,
+    "species_count": 4,
+    "resource_count": 756,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 85,
+    "avg_energy": 43.0,
+    "avg_age": 206.3,
+    "species_count": 5,
+    "resource_count": 758,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 86,
+    "avg_energy": 42.6,
+    "avg_age": 208.8,
+    "species_count": 5,
+    "resource_count": 758,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 83,
+    "avg_energy": 44.9,
+    "avg_age": 217.7,
+    "species_count": 4,
+    "resource_count": 766,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 88,
+    "avg_energy": 42.4,
+    "avg_age": 210.1,
+    "species_count": 4,
+    "resource_count": 771,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 91,
+    "avg_energy": 39.6,
+    "avg_age": 208.1,
+    "species_count": 4,
+    "resource_count": 774,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 89,
+    "avg_energy": 39.8,
+    "avg_age": 211.8,
+    "species_count": 4,
+    "resource_count": 775,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 85,
+    "avg_energy": 42.2,
+    "avg_age": 218.0,
+    "species_count": 4,
+    "resource_count": 779,
+    "avg_nodes": 5.1,
+    "max_generation": 2
+  },
+  {
+    "population": 87,
+    "avg_energy": 42.2,
+    "avg_age": 217.7,
+    "species_count": 5,
+    "resource_count": 775,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 86,
+    "avg_energy": 43.5,
+    "avg_age": 222.7,
+    "species_count": 5,
+    "resource_count": 776,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 86,
+    "avg_energy": 43.9,
+    "avg_age": 227.6,
+    "species_count": 5,
+    "resource_count": 780,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 86,
+    "avg_energy": 44.8,
+    "avg_age": 228.8,
+    "species_count": 5,
+    "resource_count": 778,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 84,
+    "avg_energy": 46.8,
+    "avg_age": 236.3,
+    "species_count": 4,
+    "resource_count": 780,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 84,
+    "avg_energy": 47.1,
+    "avg_age": 240.9,
+    "species_count": 4,
+    "resource_count": 784,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 85,
+    "avg_energy": 47.5,
+    "avg_age": 243.0,
+    "species_count": 4,
+    "resource_count": 785,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 86,
+    "avg_energy": 47.8,
+    "avg_age": 245.1,
+    "species_count": 4,
+    "resource_count": 783,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 87,
+    "avg_energy": 47.4,
+    "avg_age": 247.3,
+    "species_count": 4,
+    "resource_count": 785,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 88,
+    "avg_energy": 46.6,
+    "avg_age": 249.4,
+    "species_count": 4,
+    "resource_count": 789,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 89,
+    "avg_energy": 45.8,
+    "avg_age": 251.6,
+    "species_count": 4,
+    "resource_count": 789,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 90,
+    "avg_energy": 45.2,
+    "avg_age": 253.7,
+    "species_count": 4,
+    "resource_count": 793,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 89,
+    "avg_energy": 46.4,
+    "avg_age": 260.1,
+    "species_count": 4,
+    "resource_count": 795,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 90,
+    "avg_energy": 46.8,
+    "avg_age": 262.0,
+    "species_count": 4,
+    "resource_count": 793,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 90,
+    "avg_energy": 47.3,
+    "avg_age": 265.1,
+    "species_count": 4,
+    "resource_count": 797,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 89,
+    "avg_energy": 48.3,
+    "avg_age": 271.6,
+    "species_count": 4,
+    "resource_count": 799,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 91,
+    "avg_energy": 47.8,
+    "avg_age": 267.2,
+    "species_count": 4,
+    "resource_count": 802,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 91,
+    "avg_energy": 47.0,
+    "avg_age": 272.2,
+    "species_count": 4,
+    "resource_count": 806,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 94,
+    "avg_energy": 46.1,
+    "avg_age": 268.4,
+    "species_count": 4,
+    "resource_count": 802,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 96,
+    "avg_energy": 45.2,
+    "avg_age": 263.4,
+    "species_count": 4,
+    "resource_count": 804,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 99,
+    "avg_energy": 44.5,
+    "avg_age": 259.2,
+    "species_count": 4,
+    "resource_count": 804,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 99,
+    "avg_energy": 44.7,
+    "avg_age": 264.2,
+    "species_count": 4,
+    "resource_count": 807,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 99,
+    "avg_energy": 45.9,
+    "avg_age": 264.9,
+    "species_count": 4,
+    "resource_count": 805,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 103,
+    "avg_energy": 44.9,
+    "avg_age": 256.2,
+    "species_count": 4,
+    "resource_count": 803,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 104,
+    "avg_energy": 44.5,
+    "avg_age": 258.8,
+    "species_count": 4,
+    "resource_count": 806,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 104,
+    "avg_energy": 44.9,
+    "avg_age": 263.4,
+    "species_count": 4,
+    "resource_count": 807,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 104,
+    "avg_energy": 46.7,
+    "avg_age": 265.1,
+    "species_count": 4,
+    "resource_count": 803,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 105,
+    "avg_energy": 47.0,
+    "avg_age": 267.5,
+    "species_count": 4,
+    "resource_count": 802,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 106,
+    "avg_energy": 46.9,
+    "avg_age": 270.0,
+    "species_count": 4,
+    "resource_count": 801,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 107,
+    "avg_energy": 46.3,
+    "avg_age": 271.9,
+    "species_count": 4,
+    "resource_count": 803,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 107,
+    "avg_energy": 47.0,
+    "avg_age": 274.3,
+    "species_count": 3,
+    "resource_count": 803,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 110,
+    "avg_energy": 46.2,
+    "avg_age": 271.7,
+    "species_count": 3,
+    "resource_count": 805,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 109,
+    "avg_energy": 46.8,
+    "avg_age": 274.9,
+    "species_count": 3,
+    "resource_count": 804,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 110,
+    "avg_energy": 46.6,
+    "avg_age": 277.3,
+    "species_count": 3,
+    "resource_count": 809,
+    "avg_nodes": 5.1,
+    "max_generation": 3
+  },
+  {
+    "population": 112,
+    "avg_energy": 46.0,
+    "avg_age": 273.9,
+    "species_count": 3,
+    "resource_count": 807,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 111,
+    "avg_energy": 46.8,
+    "avg_age": 281.0,
+    "species_count": 3,
+    "resource_count": 809,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 111,
+    "avg_energy": 47.7,
+    "avg_age": 285.9,
+    "species_count": 3,
+    "resource_count": 807,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 110,
+    "avg_energy": 48.7,
+    "avg_age": 289.0,
+    "species_count": 3,
+    "resource_count": 808,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 111,
+    "avg_energy": 48.2,
+    "avg_age": 286.7,
+    "species_count": 3,
+    "resource_count": 808,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 114,
+    "avg_energy": 46.9,
+    "avg_age": 284.1,
+    "species_count": 3,
+    "resource_count": 807,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 115,
+    "avg_energy": 46.4,
+    "avg_age": 286.6,
+    "species_count": 3,
+    "resource_count": 804,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 114,
+    "avg_energy": 46.5,
+    "avg_age": 289.6,
+    "species_count": 3,
+    "resource_count": 807,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 115,
+    "avg_energy": 46.5,
+    "avg_age": 286.6,
+    "species_count": 3,
+    "resource_count": 809,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 118,
+    "avg_energy": 44.8,
+    "avg_age": 284.2,
+    "species_count": 3,
+    "resource_count": 814,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 118,
+    "avg_energy": 45.7,
+    "avg_age": 287.8,
+    "species_count": 4,
+    "resource_count": 810,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 117,
+    "avg_energy": 47.2,
+    "avg_age": 287.0,
+    "species_count": 4,
+    "resource_count": 806,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 121,
+    "avg_energy": 45.8,
+    "avg_age": 282.4,
+    "species_count": 5,
+    "resource_count": 805,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 122,
+    "avg_energy": 45.3,
+    "avg_age": 282.1,
+    "species_count": 5,
+    "resource_count": 805,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 121,
+    "avg_energy": 45.7,
+    "avg_age": 285.4,
+    "species_count": 5,
+    "resource_count": 808,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 117,
+    "avg_energy": 48.2,
+    "avg_age": 283.9,
+    "species_count": 5,
+    "resource_count": 810,
+    "avg_nodes": 5.1,
+    "max_generation": 4
+  },
+  {
+    "population": 120,
+    "avg_energy": 47.5,
+    "avg_age": 281.7,
+    "species_count": 5,
+    "resource_count": 804,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 123,
+    "avg_energy": 46.5,
+    "avg_age": 279.8,
+    "species_count": 5,
+    "resource_count": 802,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 124,
+    "avg_energy": 46.9,
+    "avg_age": 282.4,
+    "species_count": 5,
+    "resource_count": 802,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 122,
+    "avg_energy": 48.1,
+    "avg_age": 284.5,
+    "species_count": 5,
+    "resource_count": 805,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 124,
+    "avg_energy": 47.7,
+    "avg_age": 284.8,
+    "species_count": 5,
+    "resource_count": 801,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 124,
+    "avg_energy": 48.9,
+    "avg_age": 284.4,
+    "species_count": 5,
+    "resource_count": 797,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 123,
+    "avg_energy": 49.5,
+    "avg_age": 286.0,
+    "species_count": 4,
+    "resource_count": 798,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 119,
+    "avg_energy": 52.4,
+    "avg_age": 296.8,
+    "species_count": 4,
+    "resource_count": 794,
+    "avg_nodes": 5.0,
+    "max_generation": 4
+  },
+  {
+    "population": 120,
+    "avg_energy": 52.3,
+    "avg_age": 281.8,
+    "species_count": 4,
+    "resource_count": 793,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 126,
+    "avg_energy": 50.1,
+    "avg_age": 273.2,
+    "species_count": 4,
+    "resource_count": 784,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 125,
+    "avg_energy": 48.8,
+    "avg_age": 277.7,
+    "species_count": 4,
+    "resource_count": 789,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 122,
+    "avg_energy": 51.4,
+    "avg_age": 284.1,
+    "species_count": 4,
+    "resource_count": 784,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 122,
+    "avg_energy": 51.1,
+    "avg_age": 289.1,
+    "species_count": 4,
+    "resource_count": 784,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 121,
+    "avg_energy": 52.1,
+    "avg_age": 290.2,
+    "species_count": 4,
+    "resource_count": 784,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 124,
+    "avg_energy": 51.1,
+    "avg_age": 286.5,
+    "species_count": 5,
+    "resource_count": 782,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 125,
+    "avg_energy": 51.3,
+    "avg_age": 286.7,
+    "species_count": 5,
+    "resource_count": 777,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 128,
+    "avg_energy": 50.3,
+    "avg_age": 284.9,
+    "species_count": 4,
+    "resource_count": 774,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 131,
+    "avg_energy": 48.5,
+    "avg_age": 283.3,
+    "species_count": 4,
+    "resource_count": 772,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 134,
+    "avg_energy": 47.5,
+    "avg_age": 281.1,
+    "species_count": 4,
+    "resource_count": 768,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 132,
+    "avg_energy": 49.3,
+    "avg_age": 285.0,
+    "species_count": 4,
+    "resource_count": 763,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 132,
+    "avg_energy": 49.2,
+    "avg_age": 287.0,
+    "species_count": 4,
+    "resource_count": 766,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 132,
+    "avg_energy": 50.2,
+    "avg_age": 291.7,
+    "species_count": 4,
+    "resource_count": 760,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 131,
+    "avg_energy": 51.4,
+    "avg_age": 288.1,
+    "species_count": 5,
+    "resource_count": 755,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 131,
+    "avg_energy": 52.8,
+    "avg_age": 293.0,
+    "species_count": 5,
+    "resource_count": 745,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 135,
+    "avg_energy": 51.2,
+    "avg_age": 289.3,
+    "species_count": 5,
+    "resource_count": 745,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 138,
+    "avg_energy": 50.2,
+    "avg_age": 287.8,
+    "species_count": 5,
+    "resource_count": 740,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 138,
+    "avg_energy": 50.1,
+    "avg_age": 292.6,
+    "species_count": 5,
+    "resource_count": 738,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 140,
+    "avg_energy": 49.3,
+    "avg_age": 293.3,
+    "species_count": 5,
+    "resource_count": 732,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 140,
+    "avg_energy": 49.4,
+    "avg_age": 297.9,
+    "species_count": 5,
+    "resource_count": 732,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 143,
+    "avg_energy": 48.7,
+    "avg_age": 290.9,
+    "species_count": 5,
+    "resource_count": 729,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 144,
+    "avg_energy": 49.3,
+    "avg_age": 293.8,
+    "species_count": 5,
+    "resource_count": 724,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 145,
+    "avg_energy": 49.8,
+    "avg_age": 293.3,
+    "species_count": 5,
+    "resource_count": 721,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 147,
+    "avg_energy": 48.8,
+    "avg_age": 294.3,
+    "species_count": 5,
+    "resource_count": 723,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 145,
+    "avg_energy": 49.1,
+    "avg_age": 302.1,
+    "species_count": 5,
+    "resource_count": 724,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 145,
+    "avg_energy": 48.8,
+    "avg_age": 302.5,
+    "species_count": 5,
+    "resource_count": 725,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 148,
+    "avg_energy": 49.0,
+    "avg_age": 299.8,
+    "species_count": 5,
+    "resource_count": 714,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 151,
+    "avg_energy": 48.3,
+    "avg_age": 292.3,
+    "species_count": 5,
+    "resource_count": 709,
+    "avg_nodes": 5.0,
+    "max_generation": 5
+  },
+  {
+    "population": 154,
+    "avg_energy": 47.1,
+    "avg_age": 288.6,
+    "species_count": 5,
+    "resource_count": 704,
+    "avg_nodes": 5.0,
+    "max_generation": 6
+  },
+  {
+    "population": 153,
+    "avg_energy": 46.4,
+    "avg_age": 293.4,
+    "species_count": 5,
+    "resource_count": 711,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 151,
+    "avg_energy": 47.0,
+    "avg_age": 300.0,
+    "species_count": 5,
+    "resource_count": 707,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 151,
+    "avg_energy": 47.1,
+    "avg_age": 299.4,
+    "species_count": 5,
+    "resource_count": 701,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 154,
+    "avg_energy": 46.0,
+    "avg_age": 296.3,
+    "species_count": 6,
+    "resource_count": 700,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 156,
+    "avg_energy": 45.1,
+    "avg_age": 296.4,
+    "species_count": 6,
+    "resource_count": 696,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 153,
+    "avg_energy": 47.3,
+    "avg_age": 296.9,
+    "species_count": 6,
+    "resource_count": 688,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 152,
+    "avg_energy": 47.6,
+    "avg_age": 298.0,
+    "species_count": 6,
+    "resource_count": 684,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 153,
+    "avg_energy": 46.4,
+    "avg_age": 296.5,
+    "species_count": 6,
+    "resource_count": 689,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 155,
+    "avg_energy": 46.2,
+    "avg_age": 297.0,
+    "species_count": 6,
+    "resource_count": 684,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 156,
+    "avg_energy": 46.1,
+    "avg_age": 299.2,
+    "species_count": 7,
+    "resource_count": 676,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 157,
+    "avg_energy": 46.6,
+    "avg_age": 298.8,
+    "species_count": 7,
+    "resource_count": 668,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 161,
+    "avg_energy": 45.2,
+    "avg_age": 296.2,
+    "species_count": 7,
+    "resource_count": 666,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 160,
+    "avg_energy": 45.7,
+    "avg_age": 301.9,
+    "species_count": 7,
+    "resource_count": 660,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 163,
+    "avg_energy": 45.6,
+    "avg_age": 297.4,
+    "species_count": 8,
+    "resource_count": 656,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 164,
+    "avg_energy": 45.2,
+    "avg_age": 298.7,
+    "species_count": 8,
+    "resource_count": 655,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 165,
+    "avg_energy": 45.3,
+    "avg_age": 301.9,
+    "species_count": 8,
+    "resource_count": 647,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 162,
+    "avg_energy": 46.3,
+    "avg_age": 312.4,
+    "species_count": 8,
+    "resource_count": 642,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 162,
+    "avg_energy": 47.0,
+    "avg_age": 316.5,
+    "species_count": 8,
+    "resource_count": 635,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 164,
+    "avg_energy": 46.9,
+    "avg_age": 317.6,
+    "species_count": 8,
+    "resource_count": 630,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 168,
+    "avg_energy": 45.3,
+    "avg_age": 310.2,
+    "species_count": 8,
+    "resource_count": 628,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 171,
+    "avg_energy": 44.1,
+    "avg_age": 308.6,
+    "species_count": 7,
+    "resource_count": 628,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 169,
+    "avg_energy": 44.8,
+    "avg_age": 315.9,
+    "species_count": 7,
+    "resource_count": 626,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 172,
+    "avg_energy": 45.4,
+    "avg_age": 314.6,
+    "species_count": 7,
+    "resource_count": 615,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 173,
+    "avg_energy": 45.4,
+    "avg_age": 315.6,
+    "species_count": 7,
+    "resource_count": 608,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 175,
+    "avg_energy": 45.0,
+    "avg_age": 309.3,
+    "species_count": 7,
+    "resource_count": 601,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 177,
+    "avg_energy": 45.1,
+    "avg_age": 310.7,
+    "species_count": 7,
+    "resource_count": 591,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 177,
+    "avg_energy": 46.5,
+    "avg_age": 314.2,
+    "species_count": 7,
+    "resource_count": 576,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 182,
+    "avg_energy": 45.8,
+    "avg_age": 305.6,
+    "species_count": 7,
+    "resource_count": 560,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 188,
+    "avg_energy": 44.1,
+    "avg_age": 300.7,
+    "species_count": 7,
+    "resource_count": 554,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 188,
+    "avg_energy": 44.7,
+    "avg_age": 304.8,
+    "species_count": 7,
+    "resource_count": 547,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 191,
+    "avg_energy": 43.3,
+    "avg_age": 304.6,
+    "species_count": 7,
+    "resource_count": 550,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 193,
+    "avg_energy": 43.7,
+    "avg_age": 306.4,
+    "species_count": 7,
+    "resource_count": 540,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 192,
+    "avg_energy": 44.0,
+    "avg_age": 306.2,
+    "species_count": 7,
+    "resource_count": 533,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 191,
+    "avg_energy": 44.8,
+    "avg_age": 305.9,
+    "species_count": 7,
+    "resource_count": 527,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 191,
+    "avg_energy": 44.9,
+    "avg_age": 307.8,
+    "species_count": 7,
+    "resource_count": 522,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 188,
+    "avg_energy": 45.2,
+    "avg_age": 315.1,
+    "species_count": 8,
+    "resource_count": 526,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 188,
+    "avg_energy": 44.7,
+    "avg_age": 320.1,
+    "species_count": 8,
+    "resource_count": 528,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 188,
+    "avg_energy": 44.7,
+    "avg_age": 319.4,
+    "species_count": 8,
+    "resource_count": 526,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 187,
+    "avg_energy": 45.6,
+    "avg_age": 320.5,
+    "species_count": 8,
+    "resource_count": 521,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 185,
+    "avg_energy": 46.5,
+    "avg_age": 323.8,
+    "species_count": 8,
+    "resource_count": 519,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 188,
+    "avg_energy": 45.9,
+    "avg_age": 323.5,
+    "species_count": 8,
+    "resource_count": 511,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 189,
+    "avg_energy": 45.6,
+    "avg_age": 321.4,
+    "species_count": 8,
+    "resource_count": 509,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 192,
+    "avg_energy": 45.2,
+    "avg_age": 310.8,
+    "species_count": 8,
+    "resource_count": 504,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 192,
+    "avg_energy": 45.5,
+    "avg_age": 315.3,
+    "species_count": 8,
+    "resource_count": 500,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 192,
+    "avg_energy": 45.7,
+    "avg_age": 316.0,
+    "species_count": 8,
+    "resource_count": 495,
+    "avg_nodes": 5.1,
+    "max_generation": 6
+  },
+  {
+    "population": 196,
+    "avg_energy": 44.7,
+    "avg_age": 306.5,
+    "species_count": 9,
+    "resource_count": 489,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 193,
+    "avg_energy": 45.2,
+    "avg_age": 307.8,
+    "species_count": 9,
+    "resource_count": 493,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 194,
+    "avg_energy": 44.5,
+    "avg_age": 309.2,
+    "species_count": 9,
+    "resource_count": 493,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 199,
+    "avg_energy": 43.4,
+    "avg_age": 299.3,
+    "species_count": 9,
+    "resource_count": 492,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 199,
+    "avg_energy": 43.1,
+    "avg_age": 304.2,
+    "species_count": 9,
+    "resource_count": 491,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 198,
+    "avg_energy": 44.1,
+    "avg_age": 308.5,
+    "species_count": 9,
+    "resource_count": 484,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 200,
+    "avg_energy": 43.5,
+    "avg_age": 304.2,
+    "species_count": 10,
+    "resource_count": 487,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 202,
+    "avg_energy": 43.1,
+    "avg_age": 306.1,
+    "species_count": 10,
+    "resource_count": 485,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 204,
+    "avg_energy": 42.6,
+    "avg_age": 304.1,
+    "species_count": 10,
+    "resource_count": 484,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 206,
+    "avg_energy": 42.7,
+    "avg_age": 302.2,
+    "species_count": 11,
+    "resource_count": 481,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 203,
+    "avg_energy": 43.4,
+    "avg_age": 311.3,
+    "species_count": 9,
+    "resource_count": 478,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 205,
+    "avg_energy": 43.7,
+    "avg_age": 312.7,
+    "species_count": 9,
+    "resource_count": 471,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 207,
+    "avg_energy": 43.0,
+    "avg_age": 313.7,
+    "species_count": 9,
+    "resource_count": 471,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 205,
+    "avg_energy": 43.8,
+    "avg_age": 317.6,
+    "species_count": 9,
+    "resource_count": 467,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 207,
+    "avg_energy": 43.2,
+    "avg_age": 319.5,
+    "species_count": 9,
+    "resource_count": 463,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 211,
+    "avg_energy": 42.4,
+    "avg_age": 316.6,
+    "species_count": 9,
+    "resource_count": 455,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 210,
+    "avg_energy": 42.6,
+    "avg_age": 322.6,
+    "species_count": 9,
+    "resource_count": 455,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 210,
+    "avg_energy": 42.4,
+    "avg_age": 323.5,
+    "species_count": 9,
+    "resource_count": 455,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 209,
+    "avg_energy": 42.3,
+    "avg_age": 329.3,
+    "species_count": 9,
+    "resource_count": 453,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 212,
+    "avg_energy": 41.6,
+    "avg_age": 329.6,
+    "species_count": 9,
+    "resource_count": 448,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 215,
+    "avg_energy": 40.9,
+    "avg_age": 323.2,
+    "species_count": 9,
+    "resource_count": 446,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 210,
+    "avg_energy": 41.6,
+    "avg_age": 329.5,
+    "species_count": 8,
+    "resource_count": 453,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 213,
+    "avg_energy": 40.5,
+    "avg_age": 329.9,
+    "species_count": 8,
+    "resource_count": 450,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 211,
+    "avg_energy": 41.2,
+    "avg_age": 336.1,
+    "species_count": 8,
+    "resource_count": 443,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 212,
+    "avg_energy": 40.8,
+    "avg_age": 339.5,
+    "species_count": 8,
+    "resource_count": 437,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 213,
+    "avg_energy": 40.7,
+    "avg_age": 340.4,
+    "species_count": 8,
+    "resource_count": 428,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 217,
+    "avg_energy": 39.4,
+    "avg_age": 338.5,
+    "species_count": 8,
+    "resource_count": 427,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 214,
+    "avg_energy": 40.0,
+    "avg_age": 343.9,
+    "species_count": 8,
+    "resource_count": 425,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 212,
+    "avg_energy": 40.5,
+    "avg_age": 351.0,
+    "species_count": 8,
+    "resource_count": 426,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 215,
+    "avg_energy": 39.7,
+    "avg_age": 347.2,
+    "species_count": 8,
+    "resource_count": 424,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 216,
+    "avg_energy": 40.0,
+    "avg_age": 344.7,
+    "species_count": 8,
+    "resource_count": 416,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 219,
+    "avg_energy": 39.9,
+    "avg_age": 344.3,
+    "species_count": 8,
+    "resource_count": 406,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 221,
+    "avg_energy": 38.9,
+    "avg_age": 346.1,
+    "species_count": 8,
+    "resource_count": 402,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 221,
+    "avg_energy": 39.6,
+    "avg_age": 345.8,
+    "species_count": 8,
+    "resource_count": 393,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 222,
+    "avg_energy": 39.3,
+    "avg_age": 347.2,
+    "species_count": 8,
+    "resource_count": 392,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 225,
+    "avg_energy": 39.1,
+    "avg_age": 346.4,
+    "species_count": 8,
+    "resource_count": 383,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 224,
+    "avg_energy": 38.9,
+    "avg_age": 350.9,
+    "species_count": 8,
+    "resource_count": 385,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 225,
+    "avg_energy": 39.3,
+    "avg_age": 350.9,
+    "species_count": 8,
+    "resource_count": 372,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 222,
+    "avg_energy": 40.5,
+    "avg_age": 352.0,
+    "species_count": 8,
+    "resource_count": 369,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 225,
+    "avg_energy": 40.2,
+    "avg_age": 351.6,
+    "species_count": 8,
+    "resource_count": 363,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 39.4,
+    "avg_age": 348.6,
+    "species_count": 8,
+    "resource_count": 358,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 232,
+    "avg_energy": 38.9,
+    "avg_age": 343.9,
+    "species_count": 7,
+    "resource_count": 350,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 230,
+    "avg_energy": 38.8,
+    "avg_age": 346.3,
+    "species_count": 7,
+    "resource_count": 350,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 227,
+    "avg_energy": 39.8,
+    "avg_age": 352.0,
+    "species_count": 7,
+    "resource_count": 346,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 227,
+    "avg_energy": 40.2,
+    "avg_age": 350.8,
+    "species_count": 7,
+    "resource_count": 346,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 226,
+    "avg_energy": 40.8,
+    "avg_age": 351.8,
+    "species_count": 7,
+    "resource_count": 343,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 232,
+    "avg_energy": 39.2,
+    "avg_age": 345.3,
+    "species_count": 7,
+    "resource_count": 343,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 232,
+    "avg_energy": 39.1,
+    "avg_age": 348.6,
+    "species_count": 7,
+    "resource_count": 339,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 228,
+    "avg_energy": 39.9,
+    "avg_age": 357.4,
+    "species_count": 7,
+    "resource_count": 334,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 40.0,
+    "avg_age": 359.0,
+    "species_count": 8,
+    "resource_count": 331,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 40.2,
+    "avg_age": 359.9,
+    "species_count": 8,
+    "resource_count": 326,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 39.8,
+    "avg_age": 362.2,
+    "species_count": 8,
+    "resource_count": 329,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 39.5,
+    "avg_age": 362.1,
+    "species_count": 9,
+    "resource_count": 331,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 227,
+    "avg_energy": 39.9,
+    "avg_age": 362.0,
+    "species_count": 9,
+    "resource_count": 333,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 227,
+    "avg_energy": 40.6,
+    "avg_age": 364.2,
+    "species_count": 9,
+    "resource_count": 327,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 231,
+    "avg_energy": 39.9,
+    "avg_age": 362.9,
+    "species_count": 9,
+    "resource_count": 324,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 231,
+    "avg_energy": 40.5,
+    "avg_age": 364.3,
+    "species_count": 9,
+    "resource_count": 316,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 41.1,
+    "avg_age": 368.4,
+    "species_count": 9,
+    "resource_count": 313,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 230,
+    "avg_energy": 40.9,
+    "avg_age": 369.7,
+    "species_count": 9,
+    "resource_count": 311,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 233,
+    "avg_energy": 40.4,
+    "avg_age": 369.8,
+    "species_count": 9,
+    "resource_count": 311,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 236,
+    "avg_energy": 39.6,
+    "avg_age": 364.8,
+    "species_count": 9,
+    "resource_count": 306,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 232,
+    "avg_energy": 40.0,
+    "avg_age": 369.7,
+    "species_count": 9,
+    "resource_count": 307,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 233,
+    "avg_energy": 39.2,
+    "avg_age": 369.4,
+    "species_count": 9,
+    "resource_count": 304,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 232,
+    "avg_energy": 38.9,
+    "avg_age": 367.8,
+    "species_count": 9,
+    "resource_count": 301,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 227,
+    "avg_energy": 39.7,
+    "avg_age": 375.5,
+    "species_count": 9,
+    "resource_count": 302,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 228,
+    "avg_energy": 39.2,
+    "avg_age": 377.5,
+    "species_count": 9,
+    "resource_count": 302,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 230,
+    "avg_energy": 38.1,
+    "avg_age": 377.1,
+    "species_count": 9,
+    "resource_count": 307,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 233,
+    "avg_energy": 37.2,
+    "avg_age": 375.8,
+    "species_count": 9,
+    "resource_count": 304,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 230,
+    "avg_energy": 37.4,
+    "avg_age": 379.4,
+    "species_count": 9,
+    "resource_count": 305,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 226,
+    "avg_energy": 38.5,
+    "avg_age": 385.7,
+    "species_count": 9,
+    "resource_count": 300,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 225,
+    "avg_energy": 38.7,
+    "avg_age": 391.8,
+    "species_count": 9,
+    "resource_count": 299,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 225,
+    "avg_energy": 38.0,
+    "avg_age": 392.9,
+    "species_count": 9,
+    "resource_count": 305,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 227,
+    "avg_energy": 37.1,
+    "avg_age": 387.0,
+    "species_count": 9,
+    "resource_count": 305,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 229,
+    "avg_energy": 36.3,
+    "avg_age": 386.2,
+    "species_count": 10,
+    "resource_count": 302,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 230,
+    "avg_energy": 36.0,
+    "avg_age": 383.5,
+    "species_count": 10,
+    "resource_count": 297,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 228,
+    "avg_energy": 36.0,
+    "avg_age": 386.2,
+    "species_count": 10,
+    "resource_count": 300,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 228,
+    "avg_energy": 35.9,
+    "avg_age": 381.9,
+    "species_count": 10,
+    "resource_count": 303,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 225,
+    "avg_energy": 36.3,
+    "avg_age": 387.5,
+    "species_count": 10,
+    "resource_count": 304,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 223,
+    "avg_energy": 36.8,
+    "avg_age": 380.7,
+    "species_count": 10,
+    "resource_count": 302,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 223,
+    "avg_energy": 36.8,
+    "avg_age": 384.0,
+    "species_count": 11,
+    "resource_count": 298,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 220,
+    "avg_energy": 37.6,
+    "avg_age": 387.3,
+    "species_count": 11,
+    "resource_count": 299,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 221,
+    "avg_energy": 37.4,
+    "avg_age": 388.3,
+    "species_count": 11,
+    "resource_count": 297,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 217,
+    "avg_energy": 37.7,
+    "avg_age": 392.2,
+    "species_count": 11,
+    "resource_count": 298,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 218,
+    "avg_energy": 37.3,
+    "avg_age": 390.2,
+    "species_count": 11,
+    "resource_count": 300,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 217,
+    "avg_energy": 37.5,
+    "avg_age": 396.8,
+    "species_count": 11,
+    "resource_count": 298,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 215,
+    "avg_energy": 38.8,
+    "avg_age": 401.8,
+    "species_count": 11,
+    "resource_count": 289,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 216,
+    "avg_energy": 38.7,
+    "avg_age": 397.6,
+    "species_count": 11,
+    "resource_count": 291,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 218,
+    "avg_energy": 38.6,
+    "avg_age": 394.0,
+    "species_count": 11,
+    "resource_count": 286,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 214,
+    "avg_energy": 39.2,
+    "avg_age": 399.7,
+    "species_count": 11,
+    "resource_count": 287,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 212,
+    "avg_energy": 39.0,
+    "avg_age": 406.7,
+    "species_count": 11,
+    "resource_count": 286,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 211,
+    "avg_energy": 39.4,
+    "avg_age": 396.2,
+    "species_count": 11,
+    "resource_count": 279,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 209,
+    "avg_energy": 39.9,
+    "avg_age": 402.5,
+    "species_count": 11,
+    "resource_count": 278,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 208,
+    "avg_energy": 40.0,
+    "avg_age": 404.7,
+    "species_count": 11,
+    "resource_count": 278,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 210,
+    "avg_energy": 38.9,
+    "avg_age": 403.9,
+    "species_count": 11,
+    "resource_count": 277,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 209,
+    "avg_energy": 38.2,
+    "avg_age": 406.1,
+    "species_count": 12,
+    "resource_count": 283,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 208,
+    "avg_energy": 38.6,
+    "avg_age": 407.6,
+    "species_count": 12,
+    "resource_count": 280,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 210,
+    "avg_energy": 37.6,
+    "avg_age": 408.7,
+    "species_count": 13,
+    "resource_count": 283,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 202,
+    "avg_energy": 39.2,
+    "avg_age": 411.8,
+    "species_count": 13,
+    "resource_count": 289,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 205,
+    "avg_energy": 38.5,
+    "avg_age": 403.3,
+    "species_count": 13,
+    "resource_count": 290,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 209,
+    "avg_energy": 37.2,
+    "avg_age": 398.1,
+    "species_count": 13,
+    "resource_count": 292,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 210,
+    "avg_energy": 36.1,
+    "avg_age": 394.1,
+    "species_count": 13,
+    "resource_count": 294,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 205,
+    "avg_energy": 37.1,
+    "avg_age": 396.9,
+    "species_count": 14,
+    "resource_count": 293,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 201,
+    "avg_energy": 37.7,
+    "avg_age": 403.6,
+    "species_count": 14,
+    "resource_count": 293,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  },
+  {
+    "population": 202,
+    "avg_energy": 37.5,
+    "avg_age": 406.3,
+    "species_count": 14,
+    "resource_count": 293,
+    "avg_nodes": 5.1,
+    "max_generation": 7
+  }
+]

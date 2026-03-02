@@ -131,6 +131,7 @@ class Brain:
 
         # Hidden layer
         hidden = full_input @ self.weights_ih + self.bias_h
+        np.clip(hidden, -50.0, 50.0, out=hidden)  # prevent overflow in activation
         hidden = self.activation_fn(hidden)
 
         # Save hidden state for next tick (recurrence)
@@ -139,6 +140,7 @@ class Brain:
 
         # Output layer (sigmoid for bounded outputs)
         output = hidden @ self.weights_ho + self.bias_o
+        np.clip(output, -50.0, 50.0, out=output)  # prevent overflow in sigmoid
         output = _sigmoid(output)
 
         # Update memory from output
